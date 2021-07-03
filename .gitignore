@@ -1,0 +1,9 @@
+.*
+!.gitignore
+
+cmake-build-release*
+cmake-build-debug*
+cmake-build-relwithdebinfo*
+cmake-build-minsizerel*
+
+
