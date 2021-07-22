@@ -74,7 +74,7 @@ namespace viz {
             GUIWindow(std::string &&winname, bool *display_window) :
                     window_name_(winname), display_window_(display_window) {}
 
-            void Draw();
+            virtual void Draw();
 
             virtual void DrawContent() = 0;
 
