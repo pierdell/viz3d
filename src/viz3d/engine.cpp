@@ -122,8 +122,17 @@ namespace viz {
         ImGui::CreateContext();
         ImGuiIO &io = ImGui::GetIO();
         (void) io;
-        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;  // Enable Keyboard Controls
-        //io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;   // Enable Gamepad Controls
+        io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
+        io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
+        io.ConfigFlags |= ImGuiConfigFlags_ViewportsEnable;         // Enable Multi-Viewport / Platform Windows
+
+        ImGui::StyleColorsDark();
+        ImGuiStyle &style = ImGui::GetStyle();
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+            style.WindowRounding = 0.0f;
+            style.Colors[ImGuiCol_WindowBg].w = 1.0f;
+        }
+
         ImGui_ImplGlfw_InitForOpenGL(window_, true);
         ImGui_ImplOpenGL3_Init();
         static bool options_window = true;
@@ -154,7 +163,7 @@ namespace viz {
             }
             previous_tick = new_tick;
 
-            CHECK(ImGUIDrawFrame()) << "Failed to Draw ImGui windows";
+            CHECK(ImGUIDrawFrame(io)) << "Failed to Draw ImGui windows";
 
             glfwSwapBuffers(window_);
             glfwPollEvents();
@@ -414,7 +423,7 @@ namespace viz {
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
-    bool ExplorationEngine::ImGUIDrawFrame() {
+    bool ExplorationEngine::ImGUIDrawFrame(ImGuiIO &io) {
         ImGui_ImplOpenGL3_NewFrame();
         ImGui_ImplGlfw_NewFrame();
         ImGui::NewFrame();
@@ -426,6 +435,14 @@ namespace viz {
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+
+        if (io.ConfigFlags & ImGuiConfigFlags_ViewportsEnable) {
+            GLFWwindow *backup_current_context = glfwGetCurrentContext();
+            ImGui::UpdatePlatformWindows();
+            ImGui::RenderPlatformWindowsDefault();
+            glfwMakeContextCurrent(backup_current_context);
+        }
+
         return true;
     }
 

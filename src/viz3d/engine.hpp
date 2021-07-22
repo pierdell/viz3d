@@ -2,6 +2,8 @@
 #define LIDAR_SFM_ENGINE_H
 
 // STL
+struct ImGuiIO;
+
 #include <chrono>
 #include <map>
 #include <set>
@@ -19,6 +21,7 @@
 #include "camera.hpp"
 #include "shader.hpp"
 
+struct ImGuiIO;
 
 namespace viz {
 
@@ -128,8 +131,6 @@ namespace viz {
 
         bool StaticClean();
 
-        bool ImGUIDrawFrame();
-
         // Renders the Scene
         bool RenderScene();
 
@@ -176,6 +177,8 @@ namespace viz {
 
         // Unsafe remove
         void UnsafeRemoveModel(int index);
+
+        bool ImGUIDrawFrame(ImGuiIO &);
     };
 
 

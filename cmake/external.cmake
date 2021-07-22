@@ -67,12 +67,12 @@ endif ()
 
 FetchContent_Declare(
         imgui
-        GIT_REPOSITORY https://github.com/GrabCAD/imgui-cmake
-        GIT_TAG 0c96cdc)
+        GIT_REPOSITORY git@gitlab.com:pdell/imgui.git
+        GIT_TAG docking)
 
 if (NOT imgui_POPULATED)
     FetchContent_Populate(imgui)
-    set(_IMGUI_SOURCE_DIR ${imgui_SOURCE_DIR}/imgui)
+    set(_IMGUI_SOURCE_DIR ${imgui_SOURCE_DIR})
     set(FONTS_DIR ${_IMGUI_SOURCE_DIR}/misc/fonts)
 
     ##################################################################################################################
@@ -90,17 +90,18 @@ if (NOT imgui_POPULATED)
             ${_IMGUI_SOURCE_DIR}/imgui.cpp
             ${_IMGUI_SOURCE_DIR}/imgui_draw.cpp
             ${_IMGUI_SOURCE_DIR}/imgui_widgets.cpp
+            ${_IMGUI_SOURCE_DIR}/imgui_tables.cpp
             ${_IMGUI_SOURCE_DIR}/imgui_demo.cpp)
 
     file(GLOB FONTS_FILES ${FONTS_DIR}/*.ttf)
 
     set(HEADERS_CXX_IMPL_FILES
-            ${_IMGUI_SOURCE_DIR}/examples/imgui_impl_opengl3.h
-            ${_IMGUI_SOURCE_DIR}/examples/imgui_impl_glfw.h
+            ${_IMGUI_SOURCE_DIR}/backends/imgui_impl_opengl3.h
+            ${_IMGUI_SOURCE_DIR}/backends/imgui_impl_glfw.h
             )
     set(SOURCES_CXX_IMPL_FILES
-            ${_IMGUI_SOURCE_DIR}/examples/imgui_impl_opengl3.cpp
-            ${_IMGUI_SOURCE_DIR}/examples/imgui_impl_glfw.cpp)
+            ${_IMGUI_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
+            ${_IMGUI_SOURCE_DIR}/backends/imgui_impl_glfw.cpp)
 
 
     ##################################################################################################################
@@ -115,7 +116,7 @@ if (NOT imgui_POPULATED)
             )
     target_include_directories(imgui PUBLIC
             ${_IMGUI_SOURCE_DIR}
-            ${_IMGUI_SOURCE_DIR}/examples
+            ${_IMGUI_SOURCE_DIR}/backends
             )
     target_link_libraries(imgui PUBLIC OpenGL::GL glfw glad)
     target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD)
