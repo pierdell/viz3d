@@ -37,6 +37,7 @@ gui_thread.join();
 
 > Because it is a singleton, at any place in the code, the engine can be accessed at with:
 
+
 #### Navigation in the Window
 
 > The user can navigate in the window with a `First Person Camera`, which has the following key binding:
@@ -99,3 +100,7 @@ instance.AddModel(1, model_ptr);
 > For more details, look at an [example](src/example/example.cpp) of the usage of *viz3d*, you should see the following:
 
 ![Example](doc/example_view.png)
+
+# TODOS
+- [ ] Add the option to set the camera programatically
+- [ ] Close the engine programatically
