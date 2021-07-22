@@ -352,8 +352,8 @@ namespace viz {
             CHECK(result);
 
             return instance.StaticClean();
-        } catch (...) {
-            LOG(ERROR) << " An error was found. Exiting." << std::endl;
+        } catch (std::exception &e) {
+            LOG(ERROR) << " An error was found." << e.what() << std::endl << "Exiting." << std::endl;
             return false;
         }
     }
