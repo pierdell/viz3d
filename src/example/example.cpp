@@ -36,6 +36,18 @@ int main(int argc, char **argv) {
     }
 
     {
+        auto model_ptr = std::make_shared<viz::PointCloudModel>();
+        auto &model_data = model_ptr->ModelData();
+        model_data.default_color = Eigen::Vector3f(1.0, 0.0, 0.0);
+        model_data.xyz.resize(10000);
+        model_data.point_size = 3;
+        for (auto &point : model_data.xyz) {
+            point = Eigen::Vector3f::Random() + Eigen::Vector3f(0, 0.0, -2.0);
+        }
+        engine.AddModel(-1, model_ptr);
+    }
+
+    {
         auto model_ptr = std::make_shared<viz::PosesModel>();
         auto &model_data = model_ptr->ModelData();
         model_data.instance_model_to_world[0](0, 3) += 3.0;

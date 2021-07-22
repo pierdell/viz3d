@@ -13,10 +13,7 @@ target_link_libraries(viz3d PUBLIC OpenGL::GL glfw glad glog eigen imgui)
 target_include_directories(viz3d PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 target_include_directories(viz3d PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/viz3d)
 
-
-# Build Test Executables
-add_executable(viz3d_main main_opengl.cpp)
-target_link_libraries(viz3d_main PUBLIC viz3d)
+add_subdirectory(example)
 
 
 
