@@ -41,6 +41,7 @@ namespace viz {
 
         Eigen::Vector4f background_color = Eigen::Vector4f(1.f, 1.f, 1.f, 1.0);
 
+        int num_updates_per_frame = 1;
 
         /// EDL SHADER PARAMETERS
         bool with_edl = true;

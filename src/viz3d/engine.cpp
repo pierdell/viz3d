@@ -93,15 +93,20 @@ namespace viz {
         CHECK(mutex_add_model_.try_lock_for(std::chrono::duration<double>(1.0)))
         << "RACE CONDITION at " << __FILE__ << " line : " << __LINE__ << std::endl;
 
+        std::vector<int> models_updated;
+        models_updated.reserve(options_.num_updates_per_frame);
+
         for (auto &model_id : models_to_update_) {
             auto &model = models_[model_id];
             if (!model->IsInitialized())
                 model->InitModel();
             else
                 model->UpdateModel();
+            models_updated.push_back(model_id);
         }
 
-        models_to_update_.clear();
+        for(auto& model_id : models_updated)
+            models_to_update_.erase(model_id);
         garbage_can_.clear();
         mutex_add_model_.unlock();
         return true;
