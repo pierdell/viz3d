@@ -134,7 +134,7 @@ namespace viz {
 
         // Parameters of the motion of the camera
         double translation_speed_ = 10.0;
-        double angular_speed = 180.0;
+        double angular_speed = 160.0;
         double radius_orientation_ratio = 0.25;
 
         Eigen::Vector3d direction_array_ = Eigen::Vector3d::Zero();

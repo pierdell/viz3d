@@ -59,11 +59,11 @@ break;
 
             case ACCELERATE:
                 if (action == KEY_DOWN) {
-                    angular_speed *= 2.0;
+                    angular_speed *= 8.0;
                     translation_speed_ *= 10.0;
                 }
                 if (action == KEY_UP) {
-                    angular_speed /= 2.0;
+                    angular_speed /= 8.0;
                     translation_speed_ /= 10.0;
                 }
                 break;
@@ -77,24 +77,24 @@ break;
 
     void FPVCamera::CursorPosition(double x_pos, double y_pos) {
         // TODO
-        double x_range = x_pos - width_ / 2;
+        double x_range = x_pos / width_ - 0.5;
         auto radius_ratio = radius_orientation_ratio;
-        auto diff_x = radius_ratio * width_;
+        auto diff_x = radius_ratio;
 
-        double y_range = y_pos - height_ / 2;
-        auto diff_y = radius_ratio * height_;
+        double y_range = y_pos / height_ - 0.5;
+        auto diff_y = radius_ratio;
 
         if (state_ == FPV_MODE) {
             if (std::abs(x_range) > diff_x) {
                 auto value =
-                        (x_range < 0 ? 1.0 : -1.0) * (std::abs(x_range) - diff_x) / ((double) width_ / 2.0 - diff_x);
+                        (x_range < 0 ? 1.0 : -1.0) * (std::abs(x_range) - diff_x);
                 rotation_array_[0] = value;
             } else
                 rotation_array_[0] = 0.0;
 
             if (std::abs(y_range) > diff_y) {
                 auto value =
-                        (y_range < 0 ? 1.0 : -1.0) * (std::abs(y_range) - diff_y) / ((double) width_ / 2.0 - diff_y);
+                        (y_range < 0 ? 1.0 : -1.0) * (std::abs(y_range) - diff_y);
                 rotation_array_[1] = value;
             } else
                 rotation_array_[1] = 0.0;
