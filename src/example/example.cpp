@@ -2,6 +2,7 @@
 #include "viz3d/model.hpp"
 
 #include <thread>
+#include <imgui.h>
 
 
 namespace ImGui {
@@ -13,6 +14,16 @@ public:
     ~ImGUIDemo() = default;
 
     ImGUIDemo(std::string &&winname, bool *display) : viz::ExplorationEngine::GUIWindow(std::move(winname), display) {}
+
+    void Draw() override {
+        if (!ImGui::Begin(window_name_.c_str(), display_window_, ImGuiWindowFlags_MenuBar)) {
+            // Early out if the window is collapsed, as an optimization.
+            ImGui::End();
+            return;
+        }
+        DrawContent();
+        ImGui::End();
+    }
 
     void DrawContent() override {
         ImGui::ShowDemoWindow(display_window_);

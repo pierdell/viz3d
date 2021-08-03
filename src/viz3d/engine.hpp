@@ -145,8 +145,13 @@ namespace viz {
         GLFWwindow *window_ = nullptr;
         std::shared_ptr<ACamera> camera_ = nullptr;
 
+
+        int height_viewport_, width_viewport_;
+        int viewport_pos_x_, viewport_pos_y_;
+
         GLuint first_pass_frame_buffer_ = -1;
-        GLuint gl_color_texture_id_ = -1, gl_depth_texture_id_ = -1;
+        GLuint second_pass_frame_buffer = -1;
+        GLuint gl_color_texture_id_ = -1, gl_depth_texture_id_ = -1, gl_post_process_texture_id_;
 
         AlbedoCameraShader camera_shader_;
         EDLScreenShader screen_shader_;
