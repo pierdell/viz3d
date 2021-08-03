@@ -122,6 +122,9 @@ namespace viz {
 
         static bool LaunchMainLoop();
 
+        // Signals the engine that it should close
+        void SignalClose();
+
         ExplorationEngine();
 
     private:
@@ -141,6 +144,7 @@ namespace viz {
         explicit ExplorationEngine(int index) : index_(index) {}
 
         int index_ = -1;
+        bool do_close_;
         EngineOptions options_;
         GLFWwindow *window_ = nullptr;
         std::shared_ptr<ACamera> camera_ = nullptr;

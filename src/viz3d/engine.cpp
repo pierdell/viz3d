@@ -120,6 +120,7 @@ namespace viz {
 
     /* -------------------------------------------------------------------------------------------------------------- */
     bool ExplorationEngine::MainLoop() {
+        do_close_ = false;
         bool result = Init();
         CHECK(result) << "Could not Initialize the GLFW window.";
 
@@ -152,7 +153,7 @@ namespace viz {
                                                                   &options_window,
                                                                   &options_));
 
-        while (!glfwWindowShouldClose(window_)) {
+        while (!glfwWindowShouldClose(window_) && !do_close_) {
 
             screen_shader_.SetUpEDL(options_.with_edl, options_.edl_strength, options_.edl_distance);
             auto new_tick = steady_clock::now();
@@ -351,8 +352,6 @@ namespace viz {
     void ExplorationEngine::window_mouse_callback(GLFWwindow *window, double xpos, double ypos) {
         auto &engine = Instance();
         auto &camera = *engine.camera_;
-
-        std::cout << "xpos=" << xpos << ";ypos=" << ypos << std::endl;
         engine.camera_->CursorPosition(xpos, ypos);
     }
 
@@ -564,6 +563,10 @@ namespace viz {
         gui_windows_.push_back(ptr);
     }
 
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void ExplorationEngine::SignalClose() {
+        do_close_ = true;
+    }
 
     /* -------------------------------------------------------------------------------------------------------------- */
     /// GUIWindow
