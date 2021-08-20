@@ -1,36 +1,43 @@
 # External projects
 include(FetchContent)
 
+set(LOG_PREFIX " [CT_ICP] -- ")
+if (NOT CMAKE_BUILD_TYPE)
+	set(CMAKE_BUILD_TYPE Release)
+endif()
 
-# Eigen
-FetchContent_Declare(
-        Eigen3
-        GIT_REPOSITORY https://gitlab.com/libeigen/eigen
-        GIT_TAG 3.3.7
-)
-FetchContent_GetProperties(eigen3)
-if (NOT eigen3_POPULATED)
-    set(BUILD_TESTING OFF)
-    FetchContent_Populate(eigen3)
-    set(BUILD_TESTING OFF)
-    add_subdirectory(${eigen3_SOURCE_DIR} ${eigen3_BINARY_DIR})
-endif ()
+if(NOT EXT_INSTALL_ROOT)
+	set(EXT_INSTALL_ROOT ${CMAKE_BINARY_DIR}/external/install/${CMAKE_BUILD_TYPE})
+	message(INFO "${LOG_PREFIX}Setting the external installation root directory to ${EXT_INSTALL_ROOT}")
+endif()
 
-# Google Test For Testing
-FetchContent_Declare(
-        googletest
-        GIT_REPOSITORY https://github.com/google/googletest.git
-        GIT_TAG release-1.8.0)
-FetchContent_MakeAvailable(googletest)
-include(GoogleTest)
+# Find GLOG
+if(NOT GLOG_DIR)
+	set(GLOG_DIR ${EXT_INSTALL_ROOT}/glog)
+endif()
+find_package(glog REQUIRED)
+message(INFO "${LOG_PREFIX}Successfully Found GLOG")
+
+
+# Find Eigen
+if(NOT EIGEN_DIR)
+	set(EIGEN_DIR ${EXT_INSTALL_ROOT}/Eigen3)
+endif()
+find_package(Eigen3 REQUIRED)
+if(NOT TARGET Eigen3::Eigen)
+       message(FATAL_ERROR "${LOG_PREFIX}Could not find target Eigen3::Eigen")
+endif()
+
+message(INFO "${LOG_PREFIX}Successfully Found Eigen3")
 
 # A Color Map
 FetchContent_Declare(
         colormap
         GIT_REPOSITORY https://github.com/jgreitemann/colormap)
 if (NOT colormap_POPULATED)
-    FetchContent_Populate(colormap)
-    add_subdirectory(${colormap_SOURCE_DIR} ${colormap_BINARY_DIR})
+    FetchContent_Populate(colormap)    
+    # Include the directories of colormap
+    include_directories(${colormap_SOURCE_DIR}/include)
 endif ()
 
 # /////////////////////////////////////////////////////////////////////////////////////////////
@@ -38,42 +45,42 @@ endif ()
 
 # TODO (Set the following as optional)
 
-# GLAD : The OpenGL Loading Library
-FetchContent_Declare(
-        glad
-        GIT_REPOSITORY https://github.com/Dav1dde/glad
-        GIT_TAG v0.1.34)
-if (NOT glad_POPULATED)
-    FetchContent_Populate(glad)
-    add_subdirectory(${glad_SOURCE_DIR} ${glad_BINARY_DIR})
-endif ()
+if (NOT GLAD_DIR)
+	set(GLAD_DIR ${EXT_INSTALL_ROOT}/glad/lib/cmake)
+endif()
+find_package(glad REQUIRED CONFIG PATHS ${GLAD_DIR})
+if (NOT TARGET glad::glad)
+	message(FATAL_ERROR "${LOG_PREFIX}Could not load target glad")
+endif()
+message(INFO "${LOG_PREFIX}Successfully Found Glad")
 
 # OpenGL
 find_package(OpenGL REQUIRED)
 if (NOT TARGET OpenGL::GL)
-    message(FATAL_ERROR "GL could not be found")
+    message(FATAL_ERROR "${LOG_PREFIX}OpenGL::GL target could not be found")
 endif ()
 
 
 # GLFW : Windowing System
-FetchContent_Declare(
-        glfw
-        GIT_REPOSITORY https://github.com/glfw/glfw
-        GIT_TAG 3.3.3)
-if (NOT glfw_POPULATED)
-    FetchContent_Populate(glfw)
-    add_subdirectory(${glfw_SOURCE_DIR} ${glfw_BINARY_DIR})
-endif ()
+if (NOT GLFW_DIR)
+	set(GLFW_DIR ${EXT_INSTALL_ROOT}/glfw/lib/cmake/glfw3)
+endif()
+find_package(glfw3 REQUIRED CONFIG PATHS ${GLFW_DIR})
+if(NOT TARGET glfw)
+        message(FATAL_ERROR "${LOG_PREFIX}Target glfw could not be found")
+endif()
+message(INFO "${LOG_PREFIX}Successfully Found GLFW")
+
 
 FetchContent_Declare(
         imgui
-        GIT_REPOSITORY git@gitlab.com:pdell/imgui.git
+        GIT_REPOSITORY https://gitlab.com/pdell/imgui
         GIT_TAG docking)
 
 if (NOT imgui_POPULATED)
-    FetchContent_Populate(imgui)
-    set(_IMGUI_SOURCE_DIR ${imgui_SOURCE_DIR})
-    set(FONTS_DIR ${_IMGUI_SOURCE_DIR}/misc/fonts)
+     FetchContent_Populate(imgui)
+     set(_IMGUI_SOURCE_DIR ${imgui_SOURCE_DIR})
+     set(FONTS_DIR ${_IMGUI_SOURCE_DIR}/misc/fonts)
 
     ##################################################################################################################
     # Project Files
@@ -118,6 +125,6 @@ if (NOT imgui_POPULATED)
             ${_IMGUI_SOURCE_DIR}
             ${_IMGUI_SOURCE_DIR}/backends
             )
-    target_link_libraries(imgui PUBLIC OpenGL::GL glfw glad)
+    target_link_libraries(imgui PUBLIC OpenGL::GL glfw glad::glad)
     target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD)
 endif ()

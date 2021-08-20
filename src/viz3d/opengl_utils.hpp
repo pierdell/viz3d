@@ -3,6 +3,11 @@
 
 #include <Eigen/Dense>
 
+#if defined(_WIN32) || defined(WIN32) || defined(__WIN32__)
+#define _USE_MATH_DEFINES
+#include <math.h>
+#endif
+
 namespace viz {
 
 

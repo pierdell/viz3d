@@ -1,5 +1,6 @@
 #include "model.hpp"
 #include "opengl_utils.hpp"
+#include <array>
 
 namespace viz {
 

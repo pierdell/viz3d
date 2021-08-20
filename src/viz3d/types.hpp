@@ -13,8 +13,8 @@ namespace viz {
     typedef glMatrix<4> glMatrix4f;
     typedef glMatrix<3> glMatrix3f;
 
-    typedef std::vector<glMatrix4f, EIGEN_ALIGNED_ALLOCATOR<glMatrix4f>> ArrayM4f;
-    typedef std::vector<Eigen::Vector3f, EIGEN_ALIGNED_ALLOCATOR<Eigen::Vector3f>> ArrayV3f;
+    typedef std::vector<glMatrix4f, Eigen::aligned_allocator<glMatrix4f>> ArrayM4f;
+    typedef std::vector<Eigen::Vector3f, Eigen::aligned_allocator<Eigen::Vector3f>> ArrayV3f;
 
     // TODO Perform conversions from Matrix4d to Matrix4f and other relevant
 
@@ -22,7 +22,7 @@ namespace viz {
     template<typename Scalar, int DIM, int Options_ = Eigen::ColMajor>
     Eigen::Map<Eigen::Matrix<Scalar, -1, DIM, Options_>>
     EigenMap(std::vector<Eigen::Matrix<Scalar, DIM, 1>,
-            EIGEN_ALIGNED_ALLOCATOR<Eigen::Matrix<Scalar, DIM, 1>>> &rows) {
+            Eigen::aligned_allocator<Eigen::Matrix<Scalar, DIM, 1>>> &rows) {
         CHECK(!rows.empty());
         return Eigen::Map<Eigen::Matrix<Scalar, -1, DIM, Options_>>(&(rows[0][0]), rows.size(), DIM);
     };
