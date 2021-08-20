@@ -108,6 +108,8 @@ namespace viz {
         // Runs the Main Loop
         bool MainLoop();
 
+        void SetCameraPose(const Eigen::Matrix4d& pose);
+
         // Adds a Model
         void AddModel(int model_id_, ModelPtr model);
 

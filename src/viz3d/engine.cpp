@@ -208,6 +208,12 @@ namespace viz {
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
+    void ExplorationEngine::SetCameraPose(const Eigen::Matrix4d& pose)
+    {
+        camera_->SetAbsolutePose(pose);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
     void ExplorationEngine::framebuffer_size_callback(GLFWwindow *window, int width, int height) {
         auto &instance = Instance();
         instance.options_.height = height;
@@ -253,6 +259,13 @@ namespace viz {
             case GLFW_KEY_LEFT_SHIFT:
                 camera.ProcessEvent(ACamera::ACCELERATE, event_action);
                 break;
+            case GLFW_KEY_P:
+				camera.ProcessEvent(ACamera::RESET_ABSOLUTE_POSE, event_action);
+				break;
+			case GLFW_KEY_O:
+				camera.ProcessEvent(ACamera::RESET_RELATIVE_POSE, event_action);
+				break;
+
             default:
                 break;
         }

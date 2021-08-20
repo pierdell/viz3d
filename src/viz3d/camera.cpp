@@ -9,7 +9,7 @@ namespace viz {
     void viz::FPVCamera::UpdatePhysics(double ticks_secs) {
         // Update the location of the camera
         auto delta_tr = ticks_secs * translation_speed_;
-        location_ -= delta_tr * (orientation_ * direction_array_);
+        relative_location_ -= delta_tr * (relative_orientation_ * direction_array_);
 
         // Updates the orientation of the camera
         auto delta_rot = ticks_secs * angular_speed;
@@ -18,10 +18,10 @@ namespace viz {
         auto delta_phi = Eigen::AngleAxisd(rad(delta_rot * rotation_array_[1]), Eigen::Vector3d::UnitX());
         auto delta_psi = Eigen::AngleAxisd(rad(delta_rot * rotation_array_[2]), Eigen::Vector3d::UnitZ());
 
-        Eigen::Quaterniond orientation(orientation_);
+        Eigen::Quaterniond orientation(relative_orientation_);
         orientation = orientation * delta_theta * delta_phi * delta_psi;
         orientation.normalize();
-        orientation_ = orientation.toRotationMatrix();
+        relative_orientation_ = orientation.toRotationMatrix();
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -67,6 +67,13 @@ break;
                     translation_speed_ /= 10.0;
                 }
                 break;
+            case RESET_ABSOLUTE_POSE:
+                ResetInitialPose();
+                break;
+            case RESET_RELATIVE_POSE:
+				relative_orientation_ = Eigen::Matrix3d::Identity();
+				relative_location_ = Eigen::Vector3d(0, 0, 10);
+				break;
 
             default:
                 break;

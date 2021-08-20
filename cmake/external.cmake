@@ -1,7 +1,7 @@
 # External projects
 include(FetchContent)
 
-set(LOG_PREFIX " [CT_ICP] -- ")
+set(LOG_PREFIX " [VIZ3D] -- ")
 if (NOT CMAKE_BUILD_TYPE)
 	set(CMAKE_BUILD_TYPE Release)
 endif()
@@ -27,7 +27,6 @@ find_package(Eigen3 REQUIRED)
 if(NOT TARGET Eigen3::Eigen)
        message(FATAL_ERROR "${LOG_PREFIX}Could not find target Eigen3::Eigen")
 endif()
-
 message(INFO "${LOG_PREFIX}Successfully Found Eigen3")
 
 # A Color Map
