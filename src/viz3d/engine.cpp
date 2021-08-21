@@ -210,7 +210,8 @@ namespace viz {
     /* -------------------------------------------------------------------------------------------------------------- */
     void ExplorationEngine::SetCameraPose(const Eigen::Matrix4d& pose)
     {
-        camera_->SetAbsolutePose(pose);
+	if (camera_)
+           camera_->SetAbsolutePose(pose);
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */

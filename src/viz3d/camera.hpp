@@ -48,7 +48,7 @@ namespace viz {
             Eigen::Matrix4d pose = Eigen::Matrix4d::Identity();
             pose.block<3, 3>(0, 0) = relative_orientation_.transpose();
             pose.block<3, 1>(0, 3) = -relative_orientation_.transpose() * relative_location_;
-            pose = absolute_pose_ * pose;
+            pose = pose * absolute_pose_;
             glMatrix4f casted = pose.cast<float>();
             return casted;
         }

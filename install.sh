@@ -13,7 +13,6 @@ mkdir "${build_dir}/external"
 
 function check_command() { 
 	echo "$(pwd)"
-	read a
  }
 
 cd "${build_dir}/external"
