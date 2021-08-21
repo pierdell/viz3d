@@ -1,0 +1,16 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/pdell/dev/viz3d/Eigen3/src/Eigen3/test/umfpack_support.cpp"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"BuildOfficial"
+		],
+		"name" : "umfpack_support_2"
+	}
+}

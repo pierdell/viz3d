@@ -1,0 +1,7 @@
+/home/pdell/dev/viz3d/install/Release/glad/lib/libglad.a
+/home/pdell/dev/viz3d/install/Release/glad/include/KHR/khrplatform.h
+/home/pdell/dev/viz3d/install/Release/glad/include/glad/glad.h
+/home/pdell/dev/viz3d/install/Release/glad/lib/cmake/glad/gladConfig.cmake
+/home/pdell/dev/viz3d/install/Release/glad/lib/cmake/glad/gladConfigVersion.cmake
+/home/pdell/dev/viz3d/install/Release/glad/lib/cmake/glad/gladTargets.cmake
+/home/pdell/dev/viz3d/install/Release/glad/lib/cmake/glad/gladTargets-noconfig.cmake

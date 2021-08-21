@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/icon.dir/icon.c.o CMakeFiles/icon.dir/__/deps/glad_gl.c.o -o icon  ../src/libglfw3.a -lm -lrt -lm -ldl -lX11 -lpthread 

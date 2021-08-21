@@ -1,0 +1,8 @@
+/home/pdell/dev/viz3d/install/Release/glfw/include/GLFW/glfw3native.h
+/home/pdell/dev/viz3d/install/Release/glfw/include/GLFW/glfw3.h
+/home/pdell/dev/viz3d/install/Release/glfw/lib/cmake/glfw3/glfw3Config.cmake
+/home/pdell/dev/viz3d/install/Release/glfw/lib/cmake/glfw3/glfw3ConfigVersion.cmake
+/home/pdell/dev/viz3d/install/Release/glfw/lib/cmake/glfw3/glfw3Targets.cmake
+/home/pdell/dev/viz3d/install/Release/glfw/lib/cmake/glfw3/glfw3Targets-noconfig.cmake
+/home/pdell/dev/viz3d/install/Release/glfw/lib/pkgconfig/glfw3.pc
+/home/pdell/dev/viz3d/install/Release/glfw/lib/libglfw3.a

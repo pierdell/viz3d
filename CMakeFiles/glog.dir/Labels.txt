@@ -1,0 +1,13 @@
+# Target labels
+ glog
+# Source files and their labels
+/home/pdell/dev/viz3d/CMakeFiles/glog
+/home/pdell/dev/viz3d/CMakeFiles/glog.rule
+/home/pdell/dev/viz3d/CMakeFiles/glog-complete.rule
+/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-build.rule
+/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-configure.rule
+/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-download.rule
+/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-install.rule
+/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-mkdir.rule
+/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-patch.rule
+/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-update.rule

@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/events.dir/events.c.o CMakeFiles/events.dir/__/deps/getopt.c.o CMakeFiles/events.dir/__/deps/glad_gl.c.o -o events  ../src/libglfw3.a -lm -lrt -lm -ldl -lX11 -lpthread 

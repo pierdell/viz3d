@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/gamma.dir/gamma.c.o CMakeFiles/gamma.dir/__/deps/glad_gl.c.o -o gamma  ../src/libglfw3.a -lm -lrt -lm -ldl -lX11 -lpthread 

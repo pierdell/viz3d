@@ -1,0 +1,43 @@
+{
+	"sources" : 
+	[
+		{
+			"file" : "/home/pdell/dev/viz3d/CMakeFiles/glog"
+		},
+		{
+			"file" : "/home/pdell/dev/viz3d/CMakeFiles/glog.rule"
+		},
+		{
+			"file" : "/home/pdell/dev/viz3d/CMakeFiles/glog-complete.rule"
+		},
+		{
+			"file" : "/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-build.rule"
+		},
+		{
+			"file" : "/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-configure.rule"
+		},
+		{
+			"file" : "/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-download.rule"
+		},
+		{
+			"file" : "/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-install.rule"
+		},
+		{
+			"file" : "/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-mkdir.rule"
+		},
+		{
+			"file" : "/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-patch.rule"
+		},
+		{
+			"file" : "/home/pdell/dev/viz3d/glog/src/glog-stamp/glog-update.rule"
+		}
+	],
+	"target" : 
+	{
+		"labels" : 
+		[
+			"glog"
+		],
+		"name" : "glog"
+	}
+}

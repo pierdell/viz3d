@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/heightmap.dir/heightmap.c.o CMakeFiles/heightmap.dir/__/deps/glad_gl.c.o -o heightmap  ../src/libglfw3.a -lm -lrt -lm -ldl -lX11 -lpthread 

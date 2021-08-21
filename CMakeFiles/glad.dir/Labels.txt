@@ -1,0 +1,13 @@
+# Target labels
+ glad
+# Source files and their labels
+/home/pdell/dev/viz3d/CMakeFiles/glad
+/home/pdell/dev/viz3d/CMakeFiles/glad.rule
+/home/pdell/dev/viz3d/CMakeFiles/glad-complete.rule
+/home/pdell/dev/viz3d/glad/src/glad-stamp/glad-build.rule
+/home/pdell/dev/viz3d/glad/src/glad-stamp/glad-configure.rule
+/home/pdell/dev/viz3d/glad/src/glad-stamp/glad-download.rule
+/home/pdell/dev/viz3d/glad/src/glad-stamp/glad-install.rule
+/home/pdell/dev/viz3d/glad/src/glad-stamp/glad-mkdir.rule
+/home/pdell/dev/viz3d/glad/src/glad-stamp/glad-patch.rule
+/home/pdell/dev/viz3d/glad/src/glad-stamp/glad-update.rule

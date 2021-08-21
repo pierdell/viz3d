@@ -1,0 +1,10 @@
+prefix=/home/pdell/dev/viz3d/install/Release/glog
+exec_prefix=/home/pdell/dev/viz3d/install/Release/glog/bin
+libdir=/home/pdell/dev/viz3d/install/Release/glog/lib
+includedir=/home/pdell/dev/viz3d/install/Release/glog/include
+
+Name: libglog
+Description: Google Log (glog) C++ logging framework
+Version: 0.5.0
+Libs: -L${libdir} -lglog
+Cflags: -I${includedir}

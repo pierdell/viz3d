@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/joysticks.dir/joysticks.c.o CMakeFiles/joysticks.dir/__/deps/glad_gl.c.o -o joysticks  ../src/libglfw3.a -lm -lrt -lm -ldl -lX11 -lpthread 

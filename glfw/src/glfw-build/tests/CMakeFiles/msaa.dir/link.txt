@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/msaa.dir/msaa.c.o CMakeFiles/msaa.dir/__/deps/getopt.c.o CMakeFiles/msaa.dir/__/deps/glad_gl.c.o -o msaa  ../src/libglfw3.a -lm -lrt -lm -ldl -lX11 -lpthread 

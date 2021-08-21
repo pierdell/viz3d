@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/windows.dir/windows.c.o CMakeFiles/windows.dir/__/deps/getopt.c.o CMakeFiles/windows.dir/__/deps/glad_gl.c.o -o windows  ../src/libglfw3.a -lm -lrt -lm -ldl -lX11 -lpthread 

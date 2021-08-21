@@ -27,8 +27,7 @@ ExternalProject_Add(
 		-DCMAKE_INSTALL_PREFIX=${EXT_INSTALL_DIR}/glog
 
 	STEP_TARGETS 	  glog-build
-	BUILD_COMMAND     ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install
-	COMMAND ${CMAKE_COMMAND} -E copy_directory "${EXT_INSTALL_DIR}/glog/bin" ${GLOBAL_RUNTIME_DIR})
+	BUILD_COMMAND     ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install)
 
 # INSTALL EIGEN
 ExternalProject_Add(

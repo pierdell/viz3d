@@ -1,0 +1,8 @@
+/home/pdell/dev/viz3d/glad/src/glad-build/CMakeFiles/install/strip.dir
+/home/pdell/dev/viz3d/glad/src/glad-build/CMakeFiles/install/local.dir
+/home/pdell/dev/viz3d/glad/src/glad-build/CMakeFiles/install.dir
+/home/pdell/dev/viz3d/glad/src/glad-build/CMakeFiles/list_install_components.dir
+/home/pdell/dev/viz3d/glad/src/glad-build/CMakeFiles/rebuild_cache.dir
+/home/pdell/dev/viz3d/glad/src/glad-build/CMakeFiles/glad.dir
+/home/pdell/dev/viz3d/glad/src/glad-build/CMakeFiles/edit_cache.dir
+/home/pdell/dev/viz3d/glad/src/glad-build/CMakeFiles/glad-generate-files.dir

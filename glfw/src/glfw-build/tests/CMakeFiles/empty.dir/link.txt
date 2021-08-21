@@ -1,0 +1,1 @@
+/usr/bin/cc -rdynamic CMakeFiles/empty.dir/empty.c.o CMakeFiles/empty.dir/__/deps/tinycthread.c.o CMakeFiles/empty.dir/__/deps/glad_gl.c.o -o empty  ../src/libglfw3.a -lm -lpthread -lrt -ldl -lX11 -lpthread 

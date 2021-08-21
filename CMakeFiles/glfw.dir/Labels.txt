@@ -1,0 +1,13 @@
+# Target labels
+ glfw
+# Source files and their labels
+/home/pdell/dev/viz3d/CMakeFiles/glfw
+/home/pdell/dev/viz3d/CMakeFiles/glfw.rule
+/home/pdell/dev/viz3d/CMakeFiles/glfw-complete.rule
+/home/pdell/dev/viz3d/glfw/src/glfw-stamp/glfw-build.rule
+/home/pdell/dev/viz3d/glfw/src/glfw-stamp/glfw-configure.rule
+/home/pdell/dev/viz3d/glfw/src/glfw-stamp/glfw-download.rule
+/home/pdell/dev/viz3d/glfw/src/glfw-stamp/glfw-install.rule
+/home/pdell/dev/viz3d/glfw/src/glfw-stamp/glfw-mkdir.rule
+/home/pdell/dev/viz3d/glfw/src/glfw-stamp/glfw-patch.rule
+/home/pdell/dev/viz3d/glfw/src/glfw-stamp/glfw-update.rule

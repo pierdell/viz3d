@@ -1,0 +1,202 @@
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wshorten64to32 failed with the following output:
+Change Dir: /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_cecbf/fast && make[3]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+/usr/bin/make  -f CMakeFiles/cmTC_cecbf.dir/build.make CMakeFiles/cmTC_cecbf.dir/build
+make[4]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_cecbf.dir/src.cxx.o
+/usr/bin/c++ -DCOMPILER_SUPPORT_Wshorten64to32  -std=c++03 -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Werror   -Wshorten-64-to-32 -o CMakeFiles/cmTC_cecbf.dir/src.cxx.o -c /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-Wshorten-64-to-32'
+CMakeFiles/cmTC_cecbf.dir/build.make:77: recipe for target 'CMakeFiles/cmTC_cecbf.dir/src.cxx.o' failed
+make[4]: *** [CMakeFiles/cmTC_cecbf.dir/src.cxx.o] Error 1
+make[4]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Makefile:127: recipe for target 'cmTC_cecbf/fast' failed
+make[3]: *** [cmTC_cecbf/fast] Error 2
+make[3]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wenumconversion failed with the following output:
+Change Dir: /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_03175/fast && make[3]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+/usr/bin/make  -f CMakeFiles/cmTC_03175.dir/build.make CMakeFiles/cmTC_03175.dir/build
+make[4]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_03175.dir/src.cxx.o
+/usr/bin/c++ -DCOMPILER_SUPPORT_Wenumconversion  -std=c++03 -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wlogical-op -Werror   -Wenum-conversion -o CMakeFiles/cmTC_03175.dir/src.cxx.o -c /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-Wenum-conversion'; did you mean '-Wno-conversion'?
+CMakeFiles/cmTC_03175.dir/build.make:77: recipe for target 'CMakeFiles/cmTC_03175.dir/src.cxx.o' failed
+make[4]: *** [CMakeFiles/cmTC_03175.dir/src.cxx.o] Error 1
+make[4]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Makefile:127: recipe for target 'cmTC_03175/fast' failed
+make[3]: *** [cmTC_03175/fast] Error 2
+make[3]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Wcpp11extensions failed with the following output:
+Change Dir: /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_624c5/fast && make[3]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+/usr/bin/make  -f CMakeFiles/cmTC_624c5.dir/build.make CMakeFiles/cmTC_624c5.dir/build
+make[4]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_624c5.dir/src.cxx.o
+/usr/bin/c++ -DCOMPILER_SUPPORT_Wcpp11extensions  -std=c++03 -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wlogical-op -Werror   -Wc++11-extensions -o CMakeFiles/cmTC_624c5.dir/src.cxx.o -c /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-Wc++11-extensions'; did you mean '-fms-extensions'?
+CMakeFiles/cmTC_624c5.dir/build.make:77: recipe for target 'CMakeFiles/cmTC_624c5.dir/src.cxx.o' failed
+make[4]: *** [CMakeFiles/cmTC_624c5.dir/src.cxx.o] Error 1
+make[4]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Makefile:127: recipe for target 'cmTC_624c5/fast' failed
+make[3]: *** [cmTC_624c5/fast] Error 2
+make[3]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_wd981 failed with the following output:
+Change Dir: /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_5c7ca/fast && make[3]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+/usr/bin/make  -f CMakeFiles/cmTC_5c7ca.dir/build.make CMakeFiles/cmTC_5c7ca.dir/build
+make[4]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_5c7ca.dir/src.cxx.o
+/usr/bin/c++ -DCOMPILER_SUPPORT_wd981  -std=c++03 -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wlogical-op -Wdouble-promotion -Wno-psabi -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Werror   -wd981 -o CMakeFiles/cmTC_5c7ca.dir/src.cxx.o -c /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-wd981'
+CMakeFiles/cmTC_5c7ca.dir/build.make:77: recipe for target 'CMakeFiles/cmTC_5c7ca.dir/src.cxx.o' failed
+make[4]: *** [CMakeFiles/cmTC_5c7ca.dir/src.cxx.o] Error 1
+make[4]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Makefile:127: recipe for target 'cmTC_5c7ca/fast' failed
+make[3]: *** [cmTC_5c7ca/fast] Error 2
+make[3]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_wd2304 failed with the following output:
+Change Dir: /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_73373/fast && make[3]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+/usr/bin/make  -f CMakeFiles/cmTC_73373.dir/build.make CMakeFiles/cmTC_73373.dir/build
+make[4]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_73373.dir/src.cxx.o
+/usr/bin/c++ -DCOMPILER_SUPPORT_wd2304  -std=c++03 -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wlogical-op -Wdouble-promotion -Wno-psabi -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Werror   -wd2304 -o CMakeFiles/cmTC_73373.dir/src.cxx.o -c /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-wd2304'
+CMakeFiles/cmTC_73373.dir/build.make:77: recipe for target 'CMakeFiles/cmTC_73373.dir/src.cxx.o' failed
+make[4]: *** [CMakeFiles/cmTC_73373.dir/src.cxx.o] Error 1
+make[4]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Makefile:127: recipe for target 'cmTC_73373/fast' failed
+make[3]: *** [cmTC_73373/fast] Error 2
+make[3]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_STRICTANSI failed with the following output:
+Change Dir: /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_93466/fast && make[3]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+/usr/bin/make  -f CMakeFiles/cmTC_93466.dir/build.make CMakeFiles/cmTC_93466.dir/build
+make[4]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_93466.dir/src.cxx.o
+/usr/bin/c++ -DCOMPILER_SUPPORT_STRICTANSI  -std=c++03 -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wlogical-op -Wdouble-promotion -Wno-psabi -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Werror   -strict-ansi -o CMakeFiles/cmTC_93466.dir/src.cxx.o -c /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-strict-ansi'; did you mean '-fstrict-enums'?
+CMakeFiles/cmTC_93466.dir/build.make:77: recipe for target 'CMakeFiles/cmTC_93466.dir/src.cxx.o' failed
+make[4]: *** [CMakeFiles/cmTC_93466.dir/src.cxx.o] Error 1
+make[4]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Makefile:127: recipe for target 'cmTC_93466/fast' failed
+make[3]: *** [cmTC_93466/fast] Error 2
+make[3]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C++ SOURCE FILE Test COMPILER_SUPPORT_Qunusedarguments failed with the following output:
+Change Dir: /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_fd355/fast && make[3]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+/usr/bin/make  -f CMakeFiles/cmTC_fd355.dir/build.make CMakeFiles/cmTC_fd355.dir/build
+make[4]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Building CXX object CMakeFiles/cmTC_fd355.dir/src.cxx.o
+/usr/bin/c++ -DCOMPILER_SUPPORT_Qunusedarguments  -std=c++03 -pedantic -Wall -Wextra -Wundef -Wcast-align -Wchar-subscripts -Wnon-virtual-dtor -Wunused-local-typedefs -Wpointer-arith -Wwrite-strings -Wformat-security -Wlogical-op -Wdouble-promotion -Wno-psabi -Wno-variadic-macros -Wno-long-long -fno-check-new -fno-common -fstrict-aliasing -Werror   -Qunused-arguments -o CMakeFiles/cmTC_fd355.dir/src.cxx.o -c /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp/src.cxx
+c++: error: unrecognized command line option '-Qunused-arguments'
+CMakeFiles/cmTC_fd355.dir/build.make:77: recipe for target 'CMakeFiles/cmTC_fd355.dir/src.cxx.o' failed
+make[4]: *** [CMakeFiles/cmTC_fd355.dir/src.cxx.o] Error 1
+make[4]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Makefile:127: recipe for target 'cmTC_fd355/fast' failed
+make[3]: *** [cmTC_fd355/fast] Error 2
+make[3]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+int main() { return 0; }
+Performing C SOURCE FILE Test CMAKE_HAVE_LIBC_PTHREAD failed with the following output:
+Change Dir: /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_0d944/fast && make[3]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+/usr/bin/make  -f CMakeFiles/cmTC_0d944.dir/build.make CMakeFiles/cmTC_0d944.dir/build
+make[4]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_0d944.dir/src.c.o
+/usr/bin/cc -DCMAKE_HAVE_LIBC_PTHREAD   -o CMakeFiles/cmTC_0d944.dir/src.c.o -c /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp/src.c
+Linking C executable cmTC_0d944
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_0d944.dir/link.txt --verbose=1
+/usr/bin/cc -rdynamic CMakeFiles/cmTC_0d944.dir/src.c.o -o cmTC_0d944 
+CMakeFiles/cmTC_0d944.dir/src.c.o: In function `main':
+src.c:(.text+0x3e): undefined reference to `pthread_create'
+src.c:(.text+0x4a): undefined reference to `pthread_detach'
+src.c:(.text+0x56): undefined reference to `pthread_cancel'
+src.c:(.text+0x67): undefined reference to `pthread_join'
+src.c:(.text+0x7b): undefined reference to `pthread_atfork'
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_0d944.dir/build.make:98: recipe for target 'cmTC_0d944' failed
+make[4]: *** [cmTC_0d944] Error 1
+make[4]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Makefile:127: recipe for target 'cmTC_0d944/fast' failed
+make[3]: *** [cmTC_0d944/fast] Error 2
+make[3]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+
+
+Source file was:
+#include <pthread.h>
+
+static void* test_func(void* data)
+{
+  return data;
+}
+
+int main(void)
+{
+  pthread_t thread;
+  pthread_create(&thread, NULL, test_func, NULL);
+  pthread_detach(thread);
+  pthread_cancel(thread);
+  pthread_join(thread, NULL);
+  pthread_atfork(NULL, NULL, NULL);
+  pthread_exit(NULL);
+
+  return 0;
+}
+
+Determining if the function pthread_create exists in the pthreads failed with the following output:
+Change Dir: /home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp
+
+Run Build Command(s):/usr/bin/make -f Makefile cmTC_f66d6/fast && make[3]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+/usr/bin/make  -f CMakeFiles/cmTC_f66d6.dir/build.make CMakeFiles/cmTC_f66d6.dir/build
+make[4]: Entering directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Building C object CMakeFiles/cmTC_f66d6.dir/CheckFunctionExists.c.o
+/usr/bin/cc   -DCHECK_FUNCTION_EXISTS=pthread_create -o CMakeFiles/cmTC_f66d6.dir/CheckFunctionExists.c.o -c /usr/share/cmake-3.21/Modules/CheckFunctionExists.c
+Linking C executable cmTC_f66d6
+/usr/bin/cmake -E cmake_link_script CMakeFiles/cmTC_f66d6.dir/link.txt --verbose=1
+/usr/bin/cc  -DCHECK_FUNCTION_EXISTS=pthread_create -rdynamic CMakeFiles/cmTC_f66d6.dir/CheckFunctionExists.c.o -o cmTC_f66d6  -lpthreads 
+/usr/bin/ld: cannot find -lpthreads
+collect2: error: ld returned 1 exit status
+CMakeFiles/cmTC_f66d6.dir/build.make:98: recipe for target 'cmTC_f66d6' failed
+make[4]: *** [cmTC_f66d6] Error 1
+make[4]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+Makefile:127: recipe for target 'cmTC_f66d6/fast' failed
+make[3]: *** [cmTC_f66d6/fast] Error 2
+make[3]: Leaving directory '/home/pdell/dev/viz3d/Eigen3/src/Eigen3-build/CMakeFiles/CMakeTmp'
+
+
+
