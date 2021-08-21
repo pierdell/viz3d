@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/stl_logging_unittest.dir/src/stl_logging_unittest.cc.o -o stl_logging_unittest  -Wl,-rpath,/home/pdell/dev/viz3d/glog/src/glog-build libglog.so.0.5.0 /usr/lib/x86_64-linux-gnu/libgflags.so.2.2.1 -lpthread 

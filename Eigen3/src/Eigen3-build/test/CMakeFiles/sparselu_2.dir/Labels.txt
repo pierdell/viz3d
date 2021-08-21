@@ -1,4 +1,0 @@
-# Target labels
- BuildOfficial
-# Source files and their labels
-/home/pdell/dev/viz3d/Eigen3/src/Eigen3/test/sparselu.cpp

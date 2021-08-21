@@ -1,3 +1,0 @@
-repository='https://github.com/Dav1dde/glad'
-module=''
-tag='origin'

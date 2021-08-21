@@ -1,1 +1,0 @@
-/usr/bin/c++ -rdynamic CMakeFiles/stacktrace_unittest.dir/src/stacktrace_unittest.cc.o -o stacktrace_unittest  -Wl,-rpath,/home/pdell/dev/viz3d/glog/src/glog-build libglog.so.0.5.0 /usr/lib/x86_64-linux-gnu/libgflags.so.2.2.1 -lpthread 

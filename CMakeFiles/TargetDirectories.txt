@@ -1,6 +1,0 @@
-/home/pdell/dev/viz3d/CMakeFiles/rebuild_cache.dir
-/home/pdell/dev/viz3d/CMakeFiles/edit_cache.dir
-/home/pdell/dev/viz3d/CMakeFiles/glfw.dir
-/home/pdell/dev/viz3d/CMakeFiles/glad.dir
-/home/pdell/dev/viz3d/CMakeFiles/Eigen3.dir
-/home/pdell/dev/viz3d/CMakeFiles/glog.dir

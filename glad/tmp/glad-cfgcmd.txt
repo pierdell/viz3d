@@ -1,1 +1,0 @@
-cmd='/usr/bin/cmake;-DCMAKE_INSTALL_PREFIX=/home/pdell/dev/viz3d/install/Release/glad;-DGLAD_INSTALL=ON;-GUnix Makefiles;<SOURCE_DIR><SOURCE_SUBDIR>'

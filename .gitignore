@@ -1,6 +1,7 @@
 .*
 !.gitignore
 
+cmake-build*
 cmake-build-release*
 cmake-build-debug*
 cmake-build-relwithdebinfo*
