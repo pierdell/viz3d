@@ -1,6 +1,6 @@
 # *viz3d*
 
-![Presentation](doc/prez.png)
+![Presentation](doc/aggregated_pointcloud.png)
 
 > *viz3D* is a lightweight OpenGL-based Point Cloud visualization library, which is primarly designed for research and debug purposes.
 > **This is not Production Code**!
@@ -99,8 +99,8 @@ instance.AddModel(1, model_ptr);
 
 > For more details, look at an [example](src/example/example.cpp) of the usage of *viz3d*, you should see the following:
 
-![Example](doc/example_view.png)
+![Example](doc/example.png)
 
 # TODOS
-- [ ] Add the option to set the camera programatically
+- [x] Add the option to set the camera programatically
 - [ ] Close the engine programatically

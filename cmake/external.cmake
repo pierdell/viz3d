@@ -73,7 +73,7 @@ message(INFO "${LOG_PREFIX}Successfully Found GLFW")
 
 FetchContent_Declare(
         imgui
-        GIT_REPOSITORY https://gitlab.com/pdell/imgui
+        GIT_REPOSITORY https://github.com/pierdell/imgui
         GIT_TAG docking)
 
 if (NOT imgui_POPULATED)
