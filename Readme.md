@@ -3,7 +3,6 @@
 ![Presentation](doc/aggregated_pointcloud.png)
 
 > *viz3D* is a lightweight OpenGL-based Point Cloud visualization library, which is primarly designed for research and debug purposes.
-> **This is not Production Code**!
 
 # Description
 
