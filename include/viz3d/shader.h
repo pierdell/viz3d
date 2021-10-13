@@ -5,7 +5,7 @@
 #include <glog/logging.h>
 #include <glad/glad.h>
 #include <GL/gl.h>
-#include "model.hpp"
+#include "model.h"
 
 
 namespace viz {

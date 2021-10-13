@@ -1,5 +1,5 @@
-#include "engine.hpp"
-#include "image.hpp"
+#include <viz3d/engine.h>
+#include <viz3d/image.h>
 
 #include <iostream>
 #include <thread>

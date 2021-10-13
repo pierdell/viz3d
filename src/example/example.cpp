@@ -1,5 +1,5 @@
-#include "viz3d/engine.hpp"
-#include "viz3d/model.hpp"
+#include "../../include/viz3d/engine.h"
+#include "../../include/viz3d/model.h"
 
 #include <thread>
 #include <imgui.h>
