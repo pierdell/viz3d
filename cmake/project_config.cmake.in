@@ -27,7 +27,7 @@ set_target_properties(imgui PROPERTIES
 add_library(viz3d INTERFACE IMPORTED)
 set_target_properties(viz3d PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES @INSTALL_ROOT@/viz3d/include
-    INTERFACE_LINK_LIBRARIES "glad;glfw;Eigen3::Eigen;glog::glog;imgui")
+    INTERFACE_LINK_LIBRARIES "glad::glad;glfw;Eigen3::Eigen;glog::glog;imgui")
 set_target_properties(viz3d PROPERTIES
     IMPORTED_LOCATION_RELEASE "@INSTALL_ROOT@/viz3d/lib/libviz3d.so")
 
