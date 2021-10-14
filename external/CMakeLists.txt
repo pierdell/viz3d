@@ -26,6 +26,7 @@ if (BUILD_GLOG)
             INSTALL_DIR ${INSTALL_ROOT}/glog
             CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX=${INSTALL_ROOT}/glog
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 
             STEP_TARGETS glog-build
             BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install)
@@ -44,6 +45,7 @@ if (BUILD_EIGEN)
             INSTALL_DIR ${INSTALL_ROOT}/Eigen3
             CMAKE_ARGS
             -DCMAKE_INSTALL_PREFIX=${INSTALL_ROOT}/Eigen3
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 
             BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install)
 endif ()
@@ -61,7 +63,7 @@ ExternalProject_Add(
         CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${INSTALL_ROOT}/glad
         -DGLAD_INSTALL=ON
-
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 
         BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install)
 
@@ -78,5 +80,6 @@ ExternalProject_Add(
         INSTALL_DIR ${INSTALL_ROOT}/glfw
         CMAKE_ARGS
         -DCMAKE_INSTALL_PREFIX=${INSTALL_ROOT}/glfw
+        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
 
         BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install)
