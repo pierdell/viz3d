@@ -17,14 +17,14 @@ if (NOT glfw_FOUND)
 endif()
 
 # Add the library imgui
-add_library(imgui INTERFACE IMPORTED)
+add_library(imgui UNKNOWN IMPORTED)
 set_target_properties(imgui PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES @INSTALL_ROOT@/imgui/include)
 set_target_properties(imgui PROPERTIES
-    IMPORTED_LOCATION_RELEASE "@INSTALL_ROOT@/imgui/libimgui.a")
+    IMPORTED_LOCATION_RELEASE "@INSTALL_ROOT@/imgui/lib/libimgui.a")
 
 # Add the library viz3d
-add_library(viz3d INTERFACE IMPORTED)
+add_library(viz3d UNKNOWN IMPORTED)
 set_target_properties(viz3d PROPERTIES
     INTERFACE_INCLUDE_DIRECTORIES @INSTALL_ROOT@/viz3d/include
     INTERFACE_LINK_LIBRARIES "glad::glad;glfw;Eigen3::Eigen;glog::glog;imgui")
