@@ -1,0 +1,36 @@
+set(INSTALL_ROOT @INSTALL_ROOT@)
+
+# Load the target glad with viz3d
+if (NOT glad_FOUND)
+    if (NOT GLAD_DIR)
+       set(GLAD_DIR ${INSTALL_ROOT}/glad/lib/cmake/glad)
+    endif()
+    find_package(glad REQUIRED CONFIG PATHS ${GLAD_DIR} NO_DEFAULT_PATH)
+endif()
+
+# Load the target glfw with viz3d if not already loaded
+if (NOT glfw_FOUND)
+   if (NOT GLFW_DIR)
+        set(GLFW_DIR ${INSTALL_ROOT}/glfw/lib/cmake/glfw3)
+   endif()
+   find_package(glfw3 REQUIRED CONFIG PATHS ${GLFW_DIR} NO_DEFAULT_PATH)
+endif()
+
+# Add the library imgui
+add_library(imgui INTERFACE IMPORTED)
+set_target_properties(imgui PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES @INSTALL_ROOT@/imgui/include)
+set_target_properties(imgui PROPERTIES
+    IMPORTED_LOCATION_RELEASE "@INSTALL_ROOT@/imgui/libimgui.a")
+
+# Add the library viz3d
+add_library(viz3d INTERFACE IMPORTED)
+set_target_properties(viz3d PROPERTIES
+    INTERFACE_INCLUDE_DIRECTORIES @INSTALL_ROOT@/viz3d/include
+    INTERFACE_LINK_LIBRARIES "glad;glfw;Eigen3::Eigen;glog::glog;imgui")
+set_target_properties(viz3d PROPERTIES
+    IMPORTED_LOCATION_RELEASE "@INSTALL_ROOT@/viz3d/lib/libviz3d.so")
+
+
+set(viz3d_FOUND TRUE)
+set(VIZ3D_FOUND TRUE)

@@ -19,5 +19,20 @@ target_include_directories(viz3d PRIVATE ${VIZ3D_INCLUDE_DIR})
 
 add_subdirectory(example)
 
+install(TARGETS imgui DESTINATION ${INSTALL_ROOT}/imgui/lib)
+install(FILES
+        ${imgui_SOURCE_DIR}/imconfig.h
+        ${imgui_SOURCE_DIR}/imgui.h
+        ${imgui_SOURCE_DIR}/imgui_internal.h
+        ${imgui_SOURCE_DIR}/imstb_textedit.h
+        ${imgui_SOURCE_DIR}/imstb_truetype.h
+        DESTINATION ${INSTALL_ROOT}/imgui/include)
+
+install(TARGETS viz3d DESTINATION ${INSTALL_ROOT}/viz3d/lib)
+install(DIRECTORY ${VIZ3D_INCLUDE_DIR} DESTINATION ${INSTALL_ROOT}/viz3d)
+# Setup the config file
+configure_file(../cmake/project_config.cmake.in
+               ${INSTALL_ROOT}/viz3d/lib/cmake/viz3dConfig.cmake @ONLY)
+
 
 
