@@ -17,16 +17,19 @@ if (NOT WIN32)
     target_link_libraries(viz3d PUBLIC ${CMAKE_DL_LIBS})
 endif ()
 
+
+# Install imgui
+set(IMGUI_INSTALL_DIR ${INSTALL_ROOT}/imgui)
+set(VIZ3D_INSTALL_DIR ${INSTALL_ROOT}/viz3d)
+
+set(CMAKE_INSTALL_PREFIX ${VIZ3D_INSTALL_DIR})
+
 target_include_directories(viz3d PUBLIC
         "$<BUILD_INTERFACE:${VIZ3D_INCLUDE_DIR}>"
         "$<INSTALL_INTERFACE:include>")
 
 add_subdirectory(example)
 
-
-# Install imgui
-set(IMGUI_INSTALL_DIR ${INSTALL_ROOT}/imgui)
-set(VIZ3D_INSTALL_DIR ${INSTALL_ROOT}/viz3d)
 
 #install(TARGETS imgui DESTINATION ${IMGUI_INSTALL_DIR}/lib)
 install(FILES
