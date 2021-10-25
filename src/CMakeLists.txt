@@ -18,8 +18,6 @@ if (NOT WIN32)
 endif ()
 
 
-# Install imgui
-set(IMGUI_INSTALL_DIR ${INSTALL_ROOT}/imgui)
 set(VIZ3D_INSTALL_DIR ${INSTALL_ROOT}/viz3d)
 
 set(CMAKE_INSTALL_PREFIX ${VIZ3D_INSTALL_DIR})
@@ -38,7 +36,7 @@ install(FILES
         ${imgui_SOURCE_DIR}/imgui_internal.h
         ${imgui_SOURCE_DIR}/imstb_textedit.h
         ${imgui_SOURCE_DIR}/imstb_truetype.h
-        DESTINATION ${VIZ3D_INSTALL_DIR}/include/imgui)
+        DESTINATION ${VIZ3D_INSTALL_DIR}/include)
 include(CMakePackageConfigHelpers)
 
 if (NOT TARGET glfw)
