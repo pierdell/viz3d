@@ -109,8 +109,10 @@ if (NOT imgui_POPULATED)
             ${SOURCES_CXX_IMPL_FILES}
             ${FONTS_FILES})
     target_include_directories(imgui PUBLIC
-            ${_IMGUI_SOURCE_DIR}
-            ${_IMGUI_SOURCE_DIR}/backends)
+            "$<BUILD_INTERFACE:${_IMGUI_SOURCE_DIR}>"
+            "$<BUILD_INTERFACE:${_IMGUI_SOURCE_DIR}/backends>"
+            "$<INSTALL_INTERFACE:include>")
+
     target_link_libraries(imgui PUBLIC OpenGL::GL glfw glad::glad)
     target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD)
 endif ()
