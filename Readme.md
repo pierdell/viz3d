@@ -88,6 +88,8 @@ model_data.xyz.resize(100);
 ... Fill the Pointcloud
 
 instance.AddModel(1, model_ptr);
+
+instance.SignalClose(); // Closes the engine
 ```
 
 ### `GUIWindow`
