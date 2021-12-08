@@ -104,4 +104,6 @@ instance.SignalClose(); // Closes the engine
 
 # TODOS
 - [x] Add the option to set the camera programatically
-- [ ] Close the engine programatically
+- [x] Close the engine programatically
+- [ ] Camera Params (notably speed in guiwindow)
+- [ ] Modify the point size of all models from a imgui window
