@@ -24,3 +24,6 @@ if (NOT glfw_FOUND)
    endif()
    find_package(glfw3 REQUIRED CONFIG PATHS ${GLFW_DIR} NO_DEFAULT_PATH)
 endif()
+
+# -- Finds the package OpenGL on disk
+find_package(OpenGL REQUIRED)
