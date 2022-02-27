@@ -59,7 +59,24 @@ if (NOT TARGET glfw)
 endif ()
 message(INFO "${LOG_PREFIX}Successfully Found GLFW")
 
+# Fetch implot dependency (at build time), to integrate the source with imgui in the generated dependency
+FetchContent_Declare(
+        implot
+        GIT_REPOSITORY https://github.com/epezent/implot
+        GIT_TAG b47c8ba)
 
+if (NOT implot_POPULATED)
+    FetchContent_Populate(implot)
+    set(IMPLOT_HDRS
+            ${implot_SOURCE_DIR}/implot.h
+            ${implot_SOURCE_DIR}/implot_internal.h)
+    set(IMPLOT_SRCS
+            ${implot_SOURCE_DIR}/implot.cpp
+            ${implot_SOURCE_DIR}/implot_demo.cpp
+            ${implot_SOURCE_DIR}/implot_items.cpp)
+endif ()
+
+# Fetch IMGUI dependency (at build time), to compensate for the lack CMakeLists.txt in the project
 FetchContent_Declare(
         imgui
         GIT_REPOSITORY https://github.com/pierdell/imgui
@@ -79,25 +96,24 @@ if (NOT imgui_POPULATED)
             ${_IMGUI_SOURCE_DIR}/imgui_internal.h
             ${_IMGUI_SOURCE_DIR}/imstb_rectpack.h
             ${_IMGUI_SOURCE_DIR}/imstb_textedit.h
-            ${_IMGUI_SOURCE_DIR}/imstb_truetype.h)
+            ${_IMGUI_SOURCE_DIR}/imstb_truetype.h
+            ${IMPLOT_HDRS})
 
     set(SOURCES_CXX_FILES
             ${_IMGUI_SOURCE_DIR}/imgui.cpp
             ${_IMGUI_SOURCE_DIR}/imgui_draw.cpp
             ${_IMGUI_SOURCE_DIR}/imgui_widgets.cpp
             ${_IMGUI_SOURCE_DIR}/imgui_tables.cpp
-            ${_IMGUI_SOURCE_DIR}/imgui_demo.cpp)
+            ${_IMGUI_SOURCE_DIR}/imgui_demo.cpp
+            ${IMPLOT_SRCS})
 
     file(GLOB FONTS_FILES ${FONTS_DIR}/*.ttf)
-
     set(HEADERS_CXX_IMPL_FILES
             ${_IMGUI_SOURCE_DIR}/backends/imgui_impl_opengl3.h
-            ${_IMGUI_SOURCE_DIR}/backends/imgui_impl_glfw.h
-            )
+            ${_IMGUI_SOURCE_DIR}/backends/imgui_impl_glfw.h)
     set(SOURCES_CXX_IMPL_FILES
             ${_IMGUI_SOURCE_DIR}/backends/imgui_impl_opengl3.cpp
             ${_IMGUI_SOURCE_DIR}/backends/imgui_impl_glfw.cpp)
-
 
     ##################################################################################################################
     # Target
@@ -109,6 +125,7 @@ if (NOT imgui_POPULATED)
             ${SOURCES_CXX_IMPL_FILES}
             ${FONTS_FILES})
     target_include_directories(imgui PUBLIC
+            "$<BUILD_INTERFACE:${implot_SOURCE_DIR}>"
             "$<BUILD_INTERFACE:${_IMGUI_SOURCE_DIR}>"
             "$<BUILD_INTERFACE:${_IMGUI_SOURCE_DIR}/backends>"
             "$<INSTALL_INTERFACE:include>")

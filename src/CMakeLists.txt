@@ -27,10 +27,9 @@ target_include_directories(viz3d PUBLIC
         "$<INSTALL_INTERFACE:include>")
 
 add_subdirectory(example)
-
-
-#install(TARGETS imgui DESTINATION ${IMGUI_INSTALL_DIR}/lib)
 install(FILES
+        ${implot_SOURCE_DIR}/implot.h
+        ${implot_SOURCE_DIR}/implot_internal.h
         ${imgui_SOURCE_DIR}/imconfig.h
         ${imgui_SOURCE_DIR}/imgui.h
         ${imgui_SOURCE_DIR}/imgui_internal.h
