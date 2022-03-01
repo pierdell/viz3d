@@ -28,6 +28,10 @@ public:
 
     ImplotDemo(std::string &&winname, bool *display) : viz::ExplorationEngine::GUIWindow(std::move(winname), display) {}
 
+    void Draw() override {
+        DrawContent();
+    }
+
     void DrawContent() override {
         ImPlot::ShowDemoWindow(display_window_);
     };
