@@ -12,7 +12,7 @@ get_filename_component(VIZ3D_INCLUDE_DIR ${VIZ3D_INCLUDE_DIR} ABSOLUTE)
 
 add_subdirectory(viz3d)
 add_library(viz3d SHARED ${VIZ3D_SRC})
-target_link_libraries(viz3d PUBLIC OpenGL::GL glfw glad::glad glog::glog Eigen3::Eigen imgui)
+target_link_libraries(viz3d PUBLIC OpenGL::GL glfw glad::glad glog::glog Eigen3::Eigen imgui ${VTK_LIBRARIES})
 if (NOT WIN32)
     target_link_libraries(viz3d PUBLIC ${CMAKE_DL_LIBS})
 endif ()

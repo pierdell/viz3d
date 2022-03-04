@@ -1,14 +1,14 @@
 # External projects
 include(FetchContent)
 
-# Find GLOG
+# --  Find GLOG
 if (NOT GLOG_DIR)
     set(GLOG_DIR ${INSTALL_ROOT}/glog)
 endif ()
 find_package(glog REQUIRED)
 message(INFO "${LOG_PREFIX}Successfully Found GLOG")
 
-# Find Eigen
+# --  Find Eigen
 if (NOT EIGEN_DIR)
     set(EIGEN_DIR ${INSTALL_ROOT}/Eigen3)
 endif ()
@@ -18,7 +18,7 @@ if (NOT TARGET Eigen3::Eigen)
 endif ()
 message(INFO "${LOG_PREFIX}Successfully Found Eigen3")
 
-# A Color Map
+# -- Color Map
 FetchContent_Declare(
         colormap
         GIT_REPOSITORY https://github.com/jgreitemann/colormap)
@@ -28,11 +28,7 @@ if (NOT colormap_POPULATED)
     include_directories(${colormap_SOURCE_DIR}/include)
 endif ()
 
-# /////////////////////////////////////////////////////////////////////////////////////////////
-# OPENGL
-
-# TODO (Set the following as optional)
-
+# -- GLAD
 if (NOT GLAD_DIR)
     set(GLAD_DIR ${INSTALL_ROOT}/glad/lib/cmake)
 endif ()
@@ -42,14 +38,13 @@ if (NOT TARGET glad::glad)
 endif ()
 message(INFO "${LOG_PREFIX}Successfully Found Glad")
 
-# OpenGL
+# -- OpenGL
 find_package(OpenGL REQUIRED)
 if (NOT TARGET OpenGL::GL)
     message(FATAL_ERROR "${LOG_PREFIX}OpenGL::GL target could not be found")
 endif ()
 
-
-# GLFW : Windowing System
+# -- GLFW : Windowing System
 if (NOT GLFW_DIR)
     set(GLFW_DIR ${INSTALL_ROOT}/glfw/lib/cmake/glfw3)
 endif ()
@@ -76,7 +71,7 @@ if (NOT implot_POPULATED)
             ${implot_SOURCE_DIR}/implot_items.cpp)
 endif ()
 
-# Fetch IMGUI dependency (at build time), to compensate for the lack CMakeLists.txt in the project
+# --  Fetch IMGUI dependency (at build time), to compensate for the lack CMakeLists.txt in the project
 FetchContent_Declare(
         imgui
         GIT_REPOSITORY https://github.com/pierdell/imgui
@@ -133,3 +128,43 @@ if (NOT imgui_POPULATED)
     target_link_libraries(imgui PUBLIC OpenGL::GL glfw glad::glad)
     target_compile_definitions(imgui PUBLIC IMGUI_IMPL_OPENGL_LOADER_GLAD)
 endif ()
+
+
+# --  VTK
+if (NOT VTK_CMAKE_PATH)
+    set(VTK_CMAKE_PATH ${INSTALL_ROOT}/vtk/lib/cmake/vtk-9.1)
+endif ()
+set(VTK_LIBRARIES "")
+find_package(VTK CONFIG COMPONENTS
+        vtkCommonColor
+        CommonComputationalGeometry
+        vtkCommonCore
+        vtkCommonDataModel
+        vtkCommonSystem
+        vtkCommonTransforms
+        vtkFiltersCore
+        vtkFiltersGeneral
+        vtkFiltersGeometry
+        FiltersModeling
+        vtkFiltersSources
+        vtkIOGeometry
+        vtkIOImage
+        vtkIOLegacy
+        vtkIOPLY
+        vtkIOParallel
+        vtkIOXML
+        vtkImagingCore
+        vtkImagingHybrid
+        vtkImagingSources
+        vtkInteractionImage
+        vtkInteractionStyle
+        InteractionWidgets
+        RenderingAnnotation
+        vtkRenderingContextOpenGL2
+        vtkRenderingCore
+        vtkRenderingFreeType
+        vtkRenderingGL2PSOpenGL2
+        vtkRenderingOpenGL2
+        OPTIONAL_COMPONENTS
+        vtkTestingRendering
+        PATHS ${VTK_CMAKE_PATH} NO_DEFAULT_PATH)

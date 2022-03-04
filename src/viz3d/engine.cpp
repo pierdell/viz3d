@@ -34,7 +34,6 @@ namespace viz {
     };
 
     /* -------------------------------------------------------------------------------------------------------------- */
-
     static bool _is_init = false;
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -533,7 +532,6 @@ namespace viz {
             ImGui::DockBuilderFinish(dock_main_id);
         }
         ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
-
         style.WindowMinSize.x = minWinSizeX;
 
         // RENDER THE VIEWPORT
