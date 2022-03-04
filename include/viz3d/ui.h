@@ -48,6 +48,9 @@ namespace viz3d {
         // Launches the GUI's main loop
         void MainLoop();
 
+        // Launches the main loop, for the singleton GUI
+        static void LaunchMainLoop(std::string &&window_name = "GUI Window");;
+
         // Adds a window to the GUI, returns the id of the window
         size_t AddWindow(GUIWindowPtr window);
 
@@ -71,7 +74,7 @@ namespace viz3d {
 
         bool InitializeGUI();
 
-        bool RenderImGUIFrame(ImGuiIO& io);
+        bool RenderImGUIFrame(ImGuiIO &io);
 
         static void GLFWResizeCallback(GLFWwindow *, int, int);
     };

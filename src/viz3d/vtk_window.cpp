@@ -6,6 +6,7 @@
 #include <vtkRenderStepsPass.h>
 #include <vtkEDLShading.h>
 #include <vtkProperty.h>
+#include <vtkMapper.h>
 
 namespace viz3d {
 
@@ -53,9 +54,8 @@ namespace viz3d {
         render_window->SetFrameBlitModeToBlitToCurrent();
         render_window->AddRenderer(renderer);
         render_window->SetInteractor(interactor);
+
         _vtk_context.render_window = render_window;
-
-
         _vtk_context.FBOId = 0;
         _vtk_context.RBOId = 0;
         _vtk_context.textureId = 0;
@@ -160,91 +160,26 @@ namespace viz3d {
 
     /* -------------------------------------------------------------------------------------------------------------- */
     void VTKWindow::DrawImGUIContent() {
+
         if (!_vtk_context.is_initialized) {
             LOG(WARNING) << "";
             return;
         }
 
-        if (ImGui::CollapsingHeader("Window Configuration")) {
+        DrawImGuiWindowConfigurations();
 
-            if (ImGui::Button("Background Color"))
-                ImGui::OpenPopup("background_color");
-
-            // Popup to select the Background color
-            if (ImGui::BeginPopup("background_color")) {
-                static float color[3] = {0.f, 0.f, 0.f};
-                ImGui::ColorPicker3("Background Color", color);
-                ImGui::Separator();
-                ImVec2 button_size = ImVec2((ImGui::GetContentRegionAvail().x -
-                                             ImGui::GetStyle().WindowPadding.x) * 0.5f, 2 * ImGui::GetFontSize());
-                if (ImGui::Button("Apply", button_size)) {
-                    _vtk_context.renderer->SetBackground(color[0], color[1], color[2]);
-                }
-                ImGui::SameLine();
-                if (ImGui::Button("Close", button_size))
-                    ImGui::CloseCurrentPopup();
-                ImGui::EndPopup();
-            }
-
-            ImGui::SameLine();
-            // Popup to select
-            if (ImGui::Button("Rendering Options"))
-                ImGui::OpenPopup("rendering_options");
-
-            if (ImGui::BeginPopup("rendering_options")) {
-                static bool with_edl_shader = false;
-                static float point_size = 1.;
-                ImGui::Checkbox("With EDL Shader", &with_edl_shader);
-                ImGui::DragFloat("Point Size", &point_size, 0.2f, 1.0f, 20.0f);
-
-                ImVec2 button_size = ImVec2((ImGui::GetContentRegionAvail().x -
-                                             ImGui::GetStyle().WindowPadding.x) * 0.5f, 2 * ImGui::GetFontSize());
-                if (ImGui::Button("Apply", button_size)) {
-
-                    _vtk_context.renderer->ReleaseGraphicsResources(_vtk_context.render_window);
-                    _vtk_context.renderer->SetRenderWindow(nullptr);
-
-                    if (with_edl_shader) {
-                        auto basicPasses = vtkSmartPointer<vtkRenderStepsPass>::New();
-                        auto edl = vtkSmartPointer<vtkEDLShading>::New();
-                        edl->SetDelegatePass(basicPasses);
-                        _vtk_context.renderer->SetPass(edl);
-                    } else {
-                        auto basicPasses = vtkSmartPointer<vtkRenderStepsPass>::New();
-                        _vtk_context.renderer->SetPass(basicPasses);
-                    }
-
-                    auto collection = _vtk_context.renderer->GetActors();
-
-                    auto actor = collection->GetLastActor();
-                    while(actor)
-                    {
-                        actor->GetProperty()->SetPointSize(point_size);
-                        actor = collection->GetNextActor();
-                    }
-                    _vtk_context.renderer->SetRenderWindow(_vtk_context.render_window);
-                }
-                ImGui::SameLine();
-                if (ImGui::Button("Close", button_size))
-                    ImGui::CloseCurrentPopup();
-                ImGui::EndPopup();
-            }
-        }
-
-
-        SetVPortSize(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _vtk_context.FBOId); // required since we set BlitToCurrent = On.
-        _vtk_context.render_window->Render();
-        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-
-        ImGui::BeginChild("##Viewport", ImVec2(0.0f, -ImGui::GetTextLineHeightWithSpacing() - 16.0f), true,
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(0., 0.));
+        ImGui::BeginChild("##Viewport", ImVec2(0.f, 0.f), true,
                           ImGuiWindowFlags_NoScrollbar | ImGuiWindowFlags_NoScrollWithMouse);
+
+        DrawVTKWindow();
+
         ProcessEvents();
-        ImGuiStyle &style = ImGui::GetStyle();
         ImGui::Image((void *) _vtk_context.textureId,
                      ImGui::GetContentRegionAvail(),
                      ImVec2(0, 1), ImVec2(1, 0));
         ImGui::EndChild();
+        ImGui::PopStyleVar();
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -263,6 +198,106 @@ namespace viz3d {
     void VTKWindow::VTKIsCurrentCallback(vtkObject *caller, unsigned long eventId, void *clientData, void *callData) {
         bool *isCurrent = static_cast<bool *>(callData);
         *isCurrent = true;
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void VTKWindow::BackgroundPopup() {
+        if (ImGui::Button("Background Color"))
+            ImGui::OpenPopup("background_color");
+        // Popup to select the Background color
+        if (ImGui::BeginPopup("background_color")) {
+            ImGui::Text("Background Color:");
+            ImGui::Separator();
+            ImVec2 button_size = ImVec2(
+                    (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().FramePadding.x) * 0.5f,
+                    2 * ImGui::GetFontSize());
+
+            static float color[3] = {0.f, 0.f, 0.f};
+            ImGui::ColorPicker3("Background Color", color);
+            ImGui::Separator();
+            if (ImGui::Button("Apply", button_size)) {
+                _vtk_context.renderer->SetBackground(color[0], color[1], color[2]);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Close", button_size))
+                ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
+        }
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void VTKWindow::RenderingPopup() {
+        // Popup to select
+        if (ImGui::Button("Rendering Options"))
+            ImGui::OpenPopup("rendering_options");
+
+        if (ImGui::BeginPopup("rendering_options")) {
+            ImGui::Text("Rendering Options:");
+            ImGui::Separator();
+
+            static bool with_edl_shader = false;
+            static float point_size = 1.;
+            static float scalar_range[2] = {0.f, 1.f};
+            ImGui::Checkbox("With EDL Shader", &with_edl_shader);
+            ImGui::DragFloat("Point Size", &point_size, 0.2f, 1.0f, 20.0f);
+            ImGui::InputFloat2("Scalar Range", scalar_range);
+
+            ImVec2 button_size = ImVec2(
+                    (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().FramePadding.x) * 0.5f,
+                    2 * ImGui::GetFontSize());
+            if (ImGui::Button("Apply", button_size)) {
+
+                _vtk_context.renderer->ReleaseGraphicsResources(_vtk_context.render_window);
+                _vtk_context.renderer->SetRenderWindow(nullptr);
+
+                if (with_edl_shader) {
+                    auto basicPasses = vtkSmartPointer<vtkRenderStepsPass>::New();
+                    auto edl = vtkSmartPointer<vtkEDLShading>::New();
+                    edl->SetDelegatePass(basicPasses);
+                    _vtk_context.renderer->SetPass(edl);
+                } else {
+                    auto basicPasses = vtkSmartPointer<vtkRenderStepsPass>::New();
+                    _vtk_context.renderer->SetPass(basicPasses);
+                }
+
+                auto collection = _vtk_context.renderer->GetActors();
+
+                auto actor = collection->GetLastActor();
+                while (actor) {
+                    actor->GetProperty()->SetPointSize(point_size);
+                    actor->GetMapper()->SetScalarRange(scalar_range[0], scalar_range[1]);
+
+                    actor = collection->GetNextActor();
+                }
+                _vtk_context.renderer->SetRenderWindow(_vtk_context.render_window);
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Close", button_size))
+                ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
+        }
+
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void VTKWindow::DrawImGuiWindowConfigurations() {
+        // Setup the GUI Options
+        if (ImGui::CollapsingHeader("Window Configuration")) {
+            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4.0, 4.0));
+            BackgroundPopup();
+            ImGui::SameLine();
+            RenderingPopup();
+            ImGui::PopStyleVar();
+        }
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void VTKWindow::DrawVTKWindow() {
+        SetVPortSize(ImGui::GetWindowSize().x, ImGui::GetWindowSize().y);
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, _vtk_context.FBOId); // required since we set BlitToCurrent = On.
+        _vtk_context.render_window->Render();
+        glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+
     }
 
 }

@@ -6,6 +6,7 @@
 #include <GLES3/gl3.h>
 #include <glad/glad.h>
 #include <GLFW/glfw3.h>
+
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <implot.h>
@@ -13,6 +14,58 @@
 #include <imgui_impl_opengl3.h>
 
 namespace viz3d {
+
+
+    namespace {
+
+        // Sets the color elements of ImGUI components
+        void DetDefaultTheme() {
+
+            auto &style = ImGui::GetStyle();
+
+            style.FrameBorderSize = 1.0;
+            style.FrameRounding = 12.;
+
+            // Setup default padding
+            style.WindowPadding = ImVec2(2, 2);
+            style.FramePadding = ImVec2(10, 5);
+
+            auto &colors = style.Colors;
+
+            colors[ImGuiCol_WindowBg] = ImVec4{0.1f, 0.105f, 0.11f, 1.0f};
+            colors[ImGuiCol_Header] = ImVec4{0.2f, 0.205f, 0.21f, 1.0f};
+            colors[ImGuiCol_HeaderHovered] = ImVec4{0.3f, 0.305f, 0.31f, 1.0f};
+            colors[ImGuiCol_HeaderActive] = ImVec4{0.15f, 0.1505f, 0.151f, 1.0f};
+            colors[ImGuiCol_Button] = ImVec4{0.2f, 0.205f, 0.21f, 1.0f};
+            colors[ImGuiCol_ButtonHovered] = ImVec4{0.3f, 0.305f, 0.31f, 1.0f};
+            colors[ImGuiCol_ButtonActive] = ImVec4{0.15f, 0.1505f, 0.151f, 1.0f};
+            colors[ImGuiCol_FrameBg] = ImVec4{0.2f, 0.205f, 0.21f, 1.0f};
+            colors[ImGuiCol_FrameBgHovered] = ImVec4{0.3f, 0.305f, 0.31f, 1.0f};
+            colors[ImGuiCol_FrameBgActive] = ImVec4{0.15f, 0.1505f, 0.151f, 1.0f};
+            colors[ImGuiCol_Tab] = ImVec4{0.15f, 0.1505f, 0.151f, 1.0f};
+            colors[ImGuiCol_TabHovered] = ImVec4{0.38f, 0.3805f, 0.381f, 1.0f};
+            colors[ImGuiCol_TabActive] = ImVec4{0.28f, 0.2805f, 0.281f, 1.0f};
+            colors[ImGuiCol_TabUnfocused] = ImVec4{0.15f, 0.1505f, 0.151f, 1.0f};
+            colors[ImGuiCol_TabUnfocusedActive] = ImVec4{0.2f, 0.205f, 0.21f, 1.0f};
+            colors[ImGuiCol_TitleBg] = ImVec4{0.15f, 0.1505f, 0.151f, 1.0f};
+            colors[ImGuiCol_TitleBgActive] = ImVec4{0.15f, 0.1505f, 0.151f, 1.0f};
+            colors[ImGuiCol_TitleBgCollapsed] = ImVec4{0.15f, 0.1505f, 0.151f, 1.0f};
+
+            // Setup Default Sizes
+            auto selection_color = ImVec4(0.63, 0.11f, 0, 1.0f);
+            colors[ImGuiCol_SliderGrab] = selection_color;
+            colors[ImGuiCol_SliderGrabActive] = selection_color;
+            colors[ImGuiCol_CheckMark] = selection_color;
+            colors[ImGuiCol_SeparatorActive] = selection_color;
+            colors[ImGuiCol_SeparatorHovered] = selection_color;
+            colors[ImGuiCol_ResizeGrip] = selection_color;
+            colors[ImGuiCol_ResizeGripHovered] = selection_color;
+            colors[ImGuiCol_ResizeGripActive] = selection_color;
+            colors[ImGuiCol_DockingPreview] = selection_color;
+            colors[ImGuiCol_TextSelectedBg] = selection_color;
+            colors[ImGuiCol_NavHighlight] = selection_color;
+        }
+    }
 
     /* -------------------------------------------------------------------------------------------------------------- */
     ImGuiWindow::~ImGuiWindow() = default;
@@ -49,6 +102,7 @@ namespace viz3d {
             style.WindowRounding = 0.0f;
             style.Colors[ImGuiCol_WindowBg].w = 1.0f;
         }
+        DetDefaultTheme();
 
         ImGui_ImplGlfw_InitForOpenGL(glfwContext.window, true);
         ImGui_ImplOpenGL3_Init();
@@ -88,6 +142,7 @@ namespace viz3d {
         instance.glfwContext.height = height;
         instance.glfwContext.width = width;
     }
+
 
     /* -------------------------------------------------------------------------------------------------------------- */
     bool GUI::InitializeGUI() {
@@ -135,6 +190,7 @@ namespace viz3d {
     /* -------------------------------------------------------------------------------------------------------------- */
     size_t GUI::window_id_ = 0;
 
+
     /* -------------------------------------------------------------------------------------------------------------- */
     bool GUI::RenderImGUIFrame(ImGuiIO &io) {
         ImGui_ImplOpenGL3_NewFrame();
@@ -142,6 +198,7 @@ namespace viz3d {
         ImGui::NewFrame();
 
         // Setup the Root Docking Space covering the whole GLFW Window
+        static bool is_initial_layout = true;
         static bool open_root_dockspace = true;
         static bool show_imgui_demo_window = true;
         static bool show_implot_demo_window = true;
@@ -165,6 +222,8 @@ namespace viz3d {
 
             ImGui::Begin("Root DockSpace", &open_root_dockspace, window_flags);
             ImGui::DockSpace(dockspace_id, ImVec2(0.0f, 0.0f), dockspace_flags);
+
+            // Setup a default layout
             ImGui::PopStyleVar(2);
 
             if (ImGui::BeginMenuBar()) {
@@ -179,18 +238,26 @@ namespace viz3d {
         }
 
         if (show_imgui_demo_window) {
+            if (is_initial_layout)
+                ImGui::SetNextWindowDockID(dockspace_id);
             ImGui::ShowDemoWindow(&show_imgui_demo_window);
         }
 
         if (show_implot_demo_window) {
+            if (is_initial_layout)
+                ImGui::SetNextWindowDockID(dockspace_id);
             ImPlot::ShowDemoWindow(&show_implot_demo_window);
         }
 
-
         for (auto &window: windows_) {
+            if (is_initial_layout)
+                ImGui::SetNextWindowDockID(dockspace_id);
             if (window.second)
+
                 window.second->Draw();
         }
+        if (is_initial_layout)
+            is_initial_layout = false;
 
         ImGui::Render();
         ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
@@ -199,6 +266,11 @@ namespace viz3d {
         ImGui::RenderPlatformWindowsDefault();
         glfwMakeContextCurrent(backup_current_context);
         return true;
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void GUI::LaunchMainLoop(std::string &&window_name) {
+        Instance(std::move(window_name)).MainLoop();
     }
 
 

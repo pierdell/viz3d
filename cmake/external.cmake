@@ -136,35 +136,35 @@ if (NOT VTK_CMAKE_PATH)
 endif ()
 set(VTK_LIBRARIES "")
 find_package(VTK CONFIG COMPONENTS
-        vtkCommonColor
+        CommonColor
         CommonComputationalGeometry
-        vtkCommonCore
-        vtkCommonDataModel
-        vtkCommonSystem
-        vtkCommonTransforms
-        vtkFiltersCore
-        vtkFiltersGeneral
-        vtkFiltersGeometry
+        CommonCore
+        CommonDataModel
+        CommonSystem
+        CommonTransforms
+        FiltersCore
+        FiltersGeneral
+        FiltersGeometry
         FiltersModeling
-        vtkFiltersSources
-        vtkIOGeometry
-        vtkIOImage
-        vtkIOLegacy
-        vtkIOPLY
-        vtkIOParallel
-        vtkIOXML
-        vtkImagingCore
-        vtkImagingHybrid
-        vtkImagingSources
-        vtkInteractionImage
-        vtkInteractionStyle
+        FiltersSources
+        IOGeometry
+        IOImage
+        IOLegacy
+        IOPLY
+        IOParallel
+        IOXML
+        ImagingCore
+        ImagingHybrid
+        ImagingSources
+        InteractionImage
+        InteractionStyle
         InteractionWidgets
         RenderingAnnotation
-        vtkRenderingContextOpenGL2
-        vtkRenderingCore
-        vtkRenderingFreeType
-        vtkRenderingGL2PSOpenGL2
-        vtkRenderingOpenGL2
+        RenderingContextOpenGL2
+        RenderingCore
+        RenderingFreeType
+        RenderingGL2PSOpenGL2
+        RenderingOpenGL2
         OPTIONAL_COMPONENTS
-        vtkTestingRendering
+        TestingRendering
         PATHS ${VTK_CMAKE_PATH} NO_DEFAULT_PATH)

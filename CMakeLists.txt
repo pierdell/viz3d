@@ -5,7 +5,6 @@ set(CMAKE_POSITION_INDEPENDENT_CODE ON)
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
-
 include(cmake/global_vars.cmake)
 include(cmake/external.cmake)
 include(cmake/test.cmake)

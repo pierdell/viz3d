@@ -29,9 +29,21 @@ namespace viz3d {
         void RemoveActor(vtkSmartPointer<vtkActor> actor);
 
         // Initializes the VTK Context for the window, must be called before DrawImGUIContent is called
-        void InitializeVTKContext();
+        virtual void InitializeVTKContext();
+
+        // Draws the ImGui components specifying the configuration of the window
+        virtual void DrawImGuiWindowConfigurations();
+
+        // Draws the VTK Window in a canvas of the ImGui Window
+        virtual void DrawVTKWindow();
 
         ~VTKWindow();
+
+    protected:
+
+        void RenderingPopup();
+
+        void BackgroundPopup();
 
     private:
         struct VTKWindowContext {

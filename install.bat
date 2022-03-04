@@ -9,14 +9,14 @@ mkdir %build-dir%\external
 
 cd %build_dir%\external
 
-@echo "[CT_ICP] -- Generating External Dependencies"
+@echo "[VIZ3D] -- Generating External Dependencies"
 cmake -G %CMakeGenerator% -S %src_dir%\external -DINSTALL_DIR=%install_dir%
-@echo "[CT_ICP] -- Building External Dependencies"
+@echo "[VIZ3D] -- Building External Dependencies"
 cmake --build . --config Release
 
-@echo "[CT_ICP] -- Generating CMake File"
+@echo "[VIZ3D] -- Generating CMake File"
 cd %build_dir%
 cmake -G %CMakeGenerator% -S %src_dir% -DINSTALL_DIR=%install_dir%
-@echo "[CT_ICP] -- Building Main Project"
+@echo "[VIZ3D] -- Building Main Project"
 cmake --build . --config Release --target install
 

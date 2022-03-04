@@ -1,106 +1,59 @@
 # *viz3d*
 
-![Presentation](doc/aggregated_pointcloud.png)
+![Presentation](doc/example.png)
 
-> *viz3D* is a lightweight OpenGL-based Point Cloud visualization library, which is primarly designed for research and debug purposes.
-> **This is not Production Code**!
+> *viz3D* is a lightweight C++ GUI library, integrating [Dear ImGUI](https://github.com/ocornut/imgui) (The amazing graphical interface library for C++), [ImPlot](https://github.com/epezent/implot) (Which provides interactive plotting library)
+> and [VTK](https://gitlab.kitware.com/vtk/vtk), the Visualization ToolKit.
+>
 
-# Description
+## Description
 
-> The main components of the package are:
->  - *The `ExplorationEngine`*
->  - *The `Model`s*
->  - *The `GUIWindow`s*
+> The library is a simple application layer the singleton `GUI`, which opens a `GLFW` window,
+> and manages a set of user-defined `ImGUIWindow`s.
+>
+> We integrate ImGui with the branch `docking`, allowing the creation of multiple viewport and the customization of the layout.
+>
+> A specialized `VTKWindow` extends an `ImGUIWindow`, and allows the creation and visualization of multiple VTK Pipelines integrated with the ImGui managed layout of windows.
+> The pipelines are rendered offscreen in a texture, and then copied in the available space of the window.
 
-### `ExplorationEngine`
+## Installation
 
-> The `ExplorationEngine` is a singleton *Rendering Engine*, (shared between threads),
-> which manages a **GLFW** window, `Model`s which are rendered in the window, as well as `GUIWindow`s defined by the user.
+> `install.sh` and `install.bat` provide complete installation scripts for Linux and Windows.
+> They first install the external dependencies (VTK, GLFW, and GLAD), then build the project.
+> The install destination is set by default to `./install`.
+>
 
-> The `ExplorationEngine` is created once `Exploration::Instance()` has been called.
-> It can be launched in the main thread (*blocking*) with:
+## Usage
 
-```
-auto& instance = Exploration::Instance();   # Returns a reference to the Engine
-instance.MainLoop();                        # Starts the engine's main loop
-```
+> The `viz3d::GUI` singleton manages a set of `viz3d::GUI::ImGuiWindow`. 
+> Child classes of `viz3d::GUI::ImGuiWindow` must specify in `DrawImGuiContent` the ImGui components
+> to appear on screen.
 
-It can also be launched in a separate thread (*non blocking*) with for instance.
+```c++
+// std::thread gui_thread {viz3d::GUI::LaunchMainLoop}; //< Launches the GUI in separate different thread
+auto gui = viz3d::GUI::Instance(); //< Initialize the GUI Singleton
 
-```
-std::thread gui_thread{ viz::ExplorationEngine::LaunchMainLoop };
+gui.AddWindow(std::make_shared<TestWindow>("Test Window")); //< Add a custom ImGui window which specifying the ImGui components to draw 
 
-... Do things in the main thread (add models, etc...)
-
-gui_thread.join();
-```
-
-> Because it is a singleton, at any place in the code, the engine can be accessed at with:
+auto vtk_window = std::make_shared<viz3d::VTKWindow>("VTK Window"); //< Creates a VTKWindow
+vtk_window->InitializeVTKContext(); //< Initialize the Offline Pipeline (Renderer,  RenderWindow and Interactor)
+vtk_window->AddActor(GetConeActor()); //< Add an actor to the window
+gui.AddWindow(vtk_window); //< Add the window to the GUI
 
 
-#### Navigation in the Window
-
-> The user can navigate in the window with a `First Person Camera`, which has the following key binding:
-
-| Key Pressed | Action \*(IF THE CAMERA IS ACTIVATED)|
-| --- | --- |
-| Z | *move Forward* |
-| S | *move Backward* |
-| Q | *move Left* |
-| D | *move Right* |
-| R | *move Up* |
-| F | *move Down* |
-| A | *rotate clockwise in roll* |
-| E | *rotate counter-clockwise in roll* |
-| SHIFT  | *Accelerate camera motion x 10, while the key is pressed* |
-
-| Mouse Action | Action |
-| --- | --- |
-| Right Click | *Activate/Deactivate the Camera* |
-| Move the cursor away from the center | *yaw, pitch orientation changes* **IF THE CAMERA IS ACTIVATED** |
-
-#### Options
-
-> The engine's options can be accessed with:
-
-```ExplorationEngine::Instance().Options();```
-
-### `Model`
-
-> The Engine renders in its main loop different `Model`s.
-> Each `Model` has the appropriate `ModelData` which contains the data needed by the Engine to render the model.
-
-> The different models availables are:
-> - `PointCloudModel`: Renders a colored vector of 3D Points. (if no color is specified, the `default_color` of the corresponding `PointCloudModelData` will be chosen)
-> - `PosesModel`: Renders a set of trajectory frames (represented by `x,y,z` axes)
-
-> The engine maintains a map **model id -> Model**.
-> The following adds a PointCloud Model to the Engine:
-
-```
-#include <viz3d/engine.h>
-
-auto& instance = ExplorationEngine::Instance();
-
-auto model_ptr = std::make_shared<PointCloudModel>();
-auto& model_data = model_ptr->ModelData();
-
-model_data.xyz.resize(100);
-... Fill the Pointcloud
-
-instance.AddModel(1, model_ptr);
+gui.MainLoop(); //< Launches the MainLoop 
+// gui_thread.join();
 ```
 
-### `GUIWindow`
+> See `example.cpp` for more details.
+> 
+> The interactor style used for each VTKWindow is the [vtkInteractorStyleMultiTouchCamera]('https://vtk.org/doc/nightly/html/classvtkInteractorStyleMultiTouchCamera.html). 
+> Which works as specified below:
+- `Left Mouse Button Pressed`: Rotates the Camera 
+- `Shift Key` + `Left Mouse Button Pressed`: Translates the camera
+- `Ctrl Key` + `Left Mouse Button Pressed`: Rotates the camera
 
-> The project integrates [Dear ImGui](https://github.com/ocornut/imgui) as a convenient lightweight GUI system.
+![Example](doc/example_2.png)
 
-> The user can add custom `GUIWindow`s to the engine which will be drawn in the main loop, and allows him to interact graphically the state of the program.
-
-> For more details, look at an [example](src/example/example.cpp) of the usage of *viz3d*, you should see the following:
-
-![Example](doc/example.png)
-
-# TODOS
-- [x] Add the option to set the camera programatically
-- [ ] Close the engine programatically
+## TODO(s)
+- [ ] Add convenient methods to create richer VTK actors
