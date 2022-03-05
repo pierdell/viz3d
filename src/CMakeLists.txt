@@ -19,7 +19,6 @@ endif ()
 
 
 set(VIZ3D_INSTALL_DIR ${INSTALL_ROOT}/viz3d)
-
 set(CMAKE_INSTALL_PREFIX ${VIZ3D_INSTALL_DIR})
 
 target_include_directories(viz3d PUBLIC

@@ -133,6 +133,7 @@ endif ()
 # --  VTK
 if (NOT VTK_CMAKE_PATH)
     set(VTK_CMAKE_PATH ${INSTALL_ROOT}/vtk/lib/cmake/vtk-9.1)
+    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:${INSTALL_ROOT}/vtk/lib")
 endif ()
 set(VTK_LIBRARIES "")
 find_package(VTK CONFIG COMPONENTS

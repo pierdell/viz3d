@@ -84,7 +84,6 @@ ExternalProject_Add(
 
         BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install)
 
-
 # INSTALL VTK
 ExternalProject_Add(
         vtk
@@ -104,5 +103,7 @@ ExternalProject_Add(
         -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
         -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
         -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+        -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE
+        -DCMAKE_INSTALL_RPATH=${INSTALL_ROOT}/vtk/lib
 
         BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install --parallel 6)
