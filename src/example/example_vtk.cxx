@@ -120,6 +120,7 @@ int main(int argc, char **argv) {
     std::thread gui_thread{viz3d::GUI::LaunchMainLoop, "GUI"};
     gui_thread.join();
     gui.RemoveWindow(window_id);
+    gui.ClearWindows();
 
     return 0;
 }

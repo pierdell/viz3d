@@ -65,6 +65,9 @@ namespace viz3d {
 
         GUI &operator=(const GUI &) = delete;
 
+        // Remove all windows
+        void ClearWindows();
+
         // Signal the engine to close
         void SignalClose();
 
@@ -80,6 +83,7 @@ namespace viz3d {
 
         bool remain_open = true;
         bool is_initialized_ = false;
+        bool clear_windows = false;
         std::map<size_t, GUIWindowPtr> windows_;
         static size_t window_id_;
 

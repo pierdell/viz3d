@@ -81,6 +81,15 @@ namespace viz3d {
         ImGui::End();
     }
 
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void GUI::ClearWindows() {
+        if (!is_initialized_)
+            windows_.clear();
+        else
+            clear_windows = true;
+    }
+
     /* -------------------------------------------------------------------------------------------------------------- */
     void GUI::MainLoop() {
         // Initialize the GLFW Window and OpenGL context
@@ -112,6 +121,12 @@ namespace viz3d {
             window.second->BeginContext();
 
         while (!glfwWindowShouldClose(glfwContext.window) && remain_open) {
+
+            if (clear_windows) {
+                windows_.clear();
+                clear_windows = false;
+            }
+
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, glfwContext.width, glfwContext.height);
             glClearColor(0.0, 0.0, 0.0, 0.0);
@@ -129,7 +144,10 @@ namespace viz3d {
         ImGui_ImplGlfw_Shutdown();
         ImPlot::DestroyContext();
         ImGui::DestroyContext();
+        glfwTerminate();
         remain_open = true;
+        is_initialized_ = false;
+        glfwContext.window = nullptr;
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
