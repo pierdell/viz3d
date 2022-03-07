@@ -107,6 +107,10 @@ namespace viz3d {
         ImGui_ImplGlfw_InitForOpenGL(glfwContext.window, true);
         ImGui_ImplOpenGL3_Init();
 
+        // Initialize the context of each window
+        for (auto &window: windows_)
+            window.second->BeginContext();
+
         while (!glfwWindowShouldClose(glfwContext.window) && remain_open) {
             glBindFramebuffer(GL_FRAMEBUFFER, 0);
             glViewport(0, 0, glfwContext.width, glfwContext.height);
@@ -116,6 +120,10 @@ namespace viz3d {
             glfwSwapBuffers(glfwContext.window);
             glfwPollEvents();
         }
+
+        // End the context of each window
+        for (auto &window: windows_)
+            window.second->EndContext();
 
         ImGui_ImplOpenGL3_Shutdown();
         ImGui_ImplGlfw_Shutdown();
@@ -200,8 +208,8 @@ namespace viz3d {
         // Setup the Root Docking Space covering the whole GLFW Window
         static bool is_initial_layout = true;
         static bool open_root_dockspace = true;
-        static bool show_imgui_demo_window = true;
-        static bool show_implot_demo_window = true;
+        static bool show_imgui_demo_window = false;
+        static bool show_implot_demo_window = false;
         static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
         ImGuiStyle &style = ImGui::GetStyle();

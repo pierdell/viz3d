@@ -1,6 +1,8 @@
 #ifndef VIZ3D_VTK_WINDOW_H
 #define VIZ3D_VTK_WINDOW_H
 
+#include <set>
+
 #include <viz3d/ui.h>
 
 #include <vtkSmartPointer.h>
@@ -14,8 +16,11 @@
 #include <glog/logging.h>
 
 #include <vtkAutoInit.h>
-VTK_MODULE_INIT(vtkRenderingOpenGL2) ;
-VTK_MODULE_INIT(vtkInteractionStyle) ;
+
+VTK_MODULE_INIT(vtkRenderingOpenGL2);
+
+VTK_MODULE_INIT(vtkInteractionStyle);
+
 VTK_MODULE_INIT(vtkRenderingFreeType);
 
 namespace viz3d {
@@ -27,7 +32,7 @@ namespace viz3d {
         // Draws the content of the window
         void DrawImGUIContent() override;
 
-        // Adds a VTK Actor to the window
+        // Adds a VTK Actor to the window, returns the Id of the Actor
         void AddActor(vtkSmartPointer<vtkActor> actor);
 
         // Removes a VTK Actor from the window
@@ -41,6 +46,10 @@ namespace viz3d {
 
         // Draws the VTK Window in a canvas of the ImGui Window
         virtual void DrawVTKWindow();
+
+        void EndContext() override;
+
+        void BeginContext() override;
 
         ~VTKWindow();
 
@@ -67,6 +76,8 @@ namespace viz3d {
             GLuint textureId = 0; //< Texture Id
 
         } _vtk_context;
+
+        std::set<vtkSmartPointer<vtkActor>> actors_;
 
         static void VTKIsCurrentCallback(vtkObject *caller, long unsigned int eventId, void *clientData,
                                          void *callData);

@@ -26,6 +26,10 @@ namespace viz3d {
 
         virtual void DrawImGUIContent() = 0;
 
+        virtual void EndContext() {};
+
+        virtual void BeginContext() {};
+
     protected:
         bool display_window = true;
         std::string window_name_;
@@ -57,8 +61,13 @@ namespace viz3d {
         // Removes a window from the GUI
         void RemoveWindow(size_t window_id);
 
+        GUI(const GUI &) = delete;
+
+        GUI &operator=(const GUI &) = delete;
+
     private:
         explicit GUI(std::string &&winname = "GUI Window");
+
 
         struct GLFWContext {
             GLFWwindow *window;

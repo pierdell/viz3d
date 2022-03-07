@@ -55,6 +55,9 @@ namespace viz3d {
         render_window->AddRenderer(renderer);
         render_window->SetInteractor(interactor);
 
+        for (auto &actor: actors_)
+            renderer->AddActor(actor);
+
         _vtk_context.render_window = render_window;
         _vtk_context.FBOId = 0;
         _vtk_context.RBOId = 0;
@@ -103,15 +106,10 @@ namespace viz3d {
 
     /* -------------------------------------------------------------------------------------------------------------- */
     VTKWindow::~VTKWindow() {
-        _vtk_context.renderer = nullptr;
-        _vtk_context.interactor_style = nullptr;
-        _vtk_context.interactor = nullptr;
         _vtk_context.render_window = nullptr;
-        _vtk_context.is_initialized = false;
-
-        glDeleteBuffers(1, &_vtk_context.FBOId);
-        glDeleteBuffers(1, &_vtk_context.RBOId);
-        glDeleteBuffers(1, &_vtk_context.textureId);
+        _vtk_context.interactor = nullptr;
+        _vtk_context.interactor_style = nullptr;
+        _vtk_context.renderer = nullptr;
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -184,8 +182,9 @@ namespace viz3d {
 
     /* -------------------------------------------------------------------------------------------------------------- */
     void VTKWindow::AddActor(vtkSmartPointer<vtkActor> actor) {
-        CHECK(_vtk_context.render_window != nullptr) << "The VTK Window has not been initialized";
-        _vtk_context.renderer->AddActor(actor);
+        actors_.insert(actor);
+        if (_vtk_context.is_initialized)
+            _vtk_context.renderer->AddActor(actor);
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -298,6 +297,26 @@ namespace viz3d {
         _vtk_context.render_window->Render();
         glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
 
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void VTKWindow::BeginContext() {
+        if (_vtk_context.is_initialized)
+            return;
+        InitializeVTKContext();
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void VTKWindow::EndContext() {
+        glDeleteBuffers(1, &_vtk_context.FBOId);
+        glDeleteBuffers(1, &_vtk_context.RBOId);
+        glDeleteBuffers(1, &_vtk_context.textureId);
+
+        _vtk_context.render_window = nullptr;
+        _vtk_context.interactor = nullptr;
+        _vtk_context.interactor_style = nullptr;
+        _vtk_context.renderer = nullptr;
+        _vtk_context.is_initialized = false;
     }
 
 }

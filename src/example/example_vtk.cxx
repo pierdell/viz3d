@@ -1,5 +1,7 @@
 #include <memory>
 
+#include <thread>
+
 #include <viz3d/ui.h>
 #include <viz3d/vtk_window.h>
 
@@ -99,20 +101,26 @@ auto GetConeActor() {
 }
 
 int main(int argc, char **argv) {
-    auto gui = viz3d::GUI::Instance();
+    auto &gui = viz3d::GUI::Instance();
     gui.AddWindow(std::make_shared<TestWindow>("Test Window"));
 
-    auto vtk_window = std::make_shared<viz3d::VTKWindow>("VTK Window");
-    vtk_window->InitializeVTKContext();
-    vtk_window->AddActor(GetConeActor());
-    gui.AddWindow(vtk_window);
+    {
+        auto vtk_window = std::make_shared<viz3d::VTKWindow>("VTK Window");
+        vtk_window->AddActor(GetConeActor());
+        gui.AddWindow(vtk_window);
+    }
 
-    auto vtk_window2 = std::make_shared<viz3d::VTKWindow>("VTK Window 2");
-    vtk_window2->InitializeVTKContext();
-    vtk_window2->AddActor(GetPointCloudActor());
-    gui.AddWindow(vtk_window2);
+    size_t window_id;
+    {
+        auto vtk_window2 = std::make_shared<viz3d::VTKWindow>("VTK Window 2");
+        vtk_window2->AddActor(GetPointCloudActor());
+        window_id = gui.AddWindow(vtk_window2);
+    }
 
-    gui.MainLoop();
+    std::thread gui_thread {viz3d::GUI::LaunchMainLoop, "GUI"};
+    gui_thread.join();
+
+    gui.RemoveWindow(window_id);
 
     return 0;
 }

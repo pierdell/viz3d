@@ -30,13 +30,12 @@
 > to appear on screen.
 
 ```c++
-// std::thread gui_thread {viz3d::GUI::LaunchMainLoop}; //< Launches the GUI in separate different thread
+// std::thread gui_thread {viz3d::GUI::LaunchMainLoop, "GUI"}; //< Launches the GUI in separate different thread
 auto gui = viz3d::GUI::Instance(); //< Initialize the GUI Singleton
 
 gui.AddWindow(std::make_shared<TestWindow>("Test Window")); //< Add a custom ImGui window which specifying the ImGui components to draw 
 
 auto vtk_window = std::make_shared<viz3d::VTKWindow>("VTK Window"); //< Creates a VTKWindow
-vtk_window->InitializeVTKContext(); //< Initialize the Offline Pipeline (Renderer,  RenderWindow and Interactor)
 vtk_window->AddActor(GetConeActor()); //< Add an actor to the window
 gui.AddWindow(vtk_window); //< Add the window to the GUI
 
