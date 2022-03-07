@@ -27,3 +27,46 @@ if (NOT glfw_FOUND)
    endif()
    find_package(glfw3 REQUIRED CONFIG PATHS ${GLFW_DIR} NO_DEFAULT_PATH)
 endif()
+
+# Load the target OpenGL with viz3d if not already loaded
+find_package(OpenGL)
+
+# Find VTK
+if (NOT VTK_FOUND)
+    if (NOT VTK_COMPONENTS)
+        set(VTK_COMPONENTS        CommonColor
+                                  CommonComputationalGeometry
+                                  CommonCore
+                                  CommonDataModel
+                                  CommonSystem
+                                  CommonTransforms
+                                  FiltersCore
+                                  FiltersGeneral
+                                  FiltersGeometry
+                                  FiltersModeling
+                                  FiltersSources
+                                  IOGeometry
+                                  IOImage
+                                  IOLegacy
+                                  IOPLY
+                                  IOParallel
+                                  IOXML
+                                  ImagingCore
+                                  ImagingHybrid
+                                  ImagingSources
+                                  InteractionImage
+                                  InteractionStyle
+                                  InteractionWidgets
+                                  RenderingAnnotation
+                                  RenderingContextOpenGL2
+                                  RenderingCore
+                                  RenderingFreeType
+                                  RenderingGL2PSOpenGL2
+                                  RenderingOpenGL2)
+    endif()
+
+    if (NOT VTK_DIR)
+           set(VTK_DIR ${INSTALL_ROOT}/vtk/lib/cmake/vtk-9.1)
+    endif()
+    find_package(VTK REQUIRED COMPONENTS ${VTK_COMPONENTS} CONFIG PATHS ${VTK_DIR} NO_DEFAULT_PATH)
+endif()
