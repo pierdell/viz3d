@@ -53,6 +53,3 @@ install(DIRECTORY ${VIZ3D_INCLUDE_DIR} DESTINATION ${INSTALL_ROOT}/viz3d)
 # Setup the config file
 configure_file(../cmake/project_config.cmake.in
         ${INSTALL_ROOT}/viz3d/lib/cmake/viz3dConfig.cmake @ONLY)
-
-
-

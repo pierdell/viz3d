@@ -39,7 +39,7 @@ cd "${build_dir}/external"
 check_status_code $?
 
 echo "[VIZ3D] -- Generating External Dependencies";
-cmake -G "${CMakeGenerator}" -S ${src_dir}/external -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DINSTALL_DIR=${install_dir} -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX
+cmake -G "${CMakeGenerator}" -S ${src_dir}/external -DCMAKE_BUILD_TYPE=${BUILD_TYPE} -DINSTALL_ROOT=${install_dir} -DCMAKE_C_COMPILER=$CC -DCMAKE_CXX_COMPILER=$CXX
 check_status_code $?
 
 echo "[VIZ3D] -- Building External Dependencies"
@@ -48,7 +48,7 @@ check_status_code $?
 
 echo "[VIZ3D] -- Generating CMake File"
 cd ${build_dir}
-cmake -G "${CMakeGenerator}" -S ${src_dir} -DINSTALL_DIR=${install_dir} -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
+cmake -G "${CMakeGenerator}" -S ${src_dir} -DINSTALL_ROOT=${install_dir} -DCMAKE_BUILD_TYPE=${BUILD_TYPE}
 check_status_code $?
 
 echo "[VIZ3D] -- Building Main Project"
