@@ -10,6 +10,7 @@
 #include <vtkDataSet.h>
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
+#include <vtkCollectionIterator.h>
 
 namespace viz3d {
 
@@ -316,8 +317,8 @@ namespace viz3d {
                 }
 
                 auto collection = _vtk_context.renderer->GetActors();
-
-                auto actor = collection->GetLastActor();
+                collection->InitTraversal();
+                auto actor = collection->GetNextActor();
                 while (actor) {
                     actor->GetProperty()->SetPointSize(point_size);
                     actor = collection->GetNextActor();
