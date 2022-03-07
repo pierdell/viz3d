@@ -59,7 +59,6 @@ namespace viz3d {
 
         void BackgroundPopup();
 
-    private:
         struct VTKWindowContext {
             vtkSmartPointer<vtkRenderWindow> render_window = nullptr;
             vtkSmartPointer<vtkRenderWindowInteractor> interactor = nullptr;

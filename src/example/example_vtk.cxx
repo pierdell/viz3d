@@ -117,9 +117,8 @@ int main(int argc, char **argv) {
         window_id = gui.AddWindow(vtk_window2);
     }
 
-    std::thread gui_thread {viz3d::GUI::LaunchMainLoop, "GUI"};
+    std::thread gui_thread{viz3d::GUI::LaunchMainLoop, "GUI"};
     gui_thread.join();
-
     gui.RemoveWindow(window_id);
 
     return 0;
