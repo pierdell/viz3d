@@ -7,6 +7,9 @@
 #include <vtkEDLShading.h>
 #include <vtkProperty.h>
 #include <vtkMapper.h>
+#include <vtkDataSet.h>
+#include <vtkDataArray.h>
+#include <vtkPointData.h>
 
 namespace viz3d {
 
@@ -224,11 +227,66 @@ namespace viz3d {
         }
     }
 
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void VTKWindow::ColorRangePopup() {
+        if (ImGui::Button("Color Options"))
+            ImGui::OpenPopup("color_options");
+
+        if (ImGui::BeginPopup("color_options")) {
+            static float scalar_range[2] = {0.f, 1.f};
+            ImGui::InputFloat2("Scalar Range", scalar_range);
+            ImVec2 button_size = ImVec2(
+                    (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().FramePadding.x) * 0.5f,
+                    2 * ImGui::GetFontSize());
+
+            auto collection = _vtk_context.renderer->GetActors();
+
+            if (ImGui::Button("Set to Min-Max", ImVec2(button_size.x * 2, button_size.y))) {
+                auto actor = collection->GetLastActor();
+                double min_max[2] = {std::numeric_limits<float>::max(), std::numeric_limits<float>::min()};
+
+                double actor_min_max[2];
+                while (actor) {
+                    auto scalars = actor->GetMapper()->GetInput()->GetPointData()->GetScalars();
+                    if (scalars) {
+                        scalars->GetRange(actor_min_max);
+                        if (actor_min_max[0] < min_max[0])
+                            min_max[0] = float(actor_min_max[0]);
+                        if (actor_min_max[1] > min_max[0])
+                            min_max[1] = float(actor_min_max[1]);
+                    }
+                    actor = collection->GetNextActor();
+                }
+                actor = collection->GetLastActor();
+                while (actor)
+                {
+                    actor->GetMapper()->SetScalarRange(min_max);
+                    actor = collection->GetNextActor();
+                }
+            }
+
+            if (ImGui::Button("Apply", button_size)) {
+                auto actor = collection->GetLastActor();
+                while (actor) {
+                    actor->GetMapper()->SetScalarRange(scalar_range[0], scalar_range[1]);
+                    actor = collection->GetNextActor();
+                }
+            }
+            ImGui::SameLine();
+            if (ImGui::Button("Close", button_size))
+                ImGui::CloseCurrentPopup();
+            ImGui::EndPopup();
+        }
+
+    }
+
     /* -------------------------------------------------------------------------------------------------------------- */
     void VTKWindow::RenderingPopup() {
         // Popup to select
         if (ImGui::Button("Rendering Options"))
             ImGui::OpenPopup("rendering_options");
+
 
         if (ImGui::BeginPopup("rendering_options")) {
             ImGui::Text("Rendering Options:");
@@ -236,10 +294,8 @@ namespace viz3d {
 
             static bool with_edl_shader = false;
             static float point_size = 1.;
-            static float scalar_range[2] = {0.f, 1.f};
             ImGui::Checkbox("With EDL Shader", &with_edl_shader);
             ImGui::DragFloat("Point Size", &point_size, 0.2f, 1.0f, 20.0f);
-            ImGui::InputFloat2("Scalar Range", scalar_range);
 
             ImVec2 button_size = ImVec2(
                     (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().FramePadding.x) * 0.5f,
@@ -264,8 +320,6 @@ namespace viz3d {
                 auto actor = collection->GetLastActor();
                 while (actor) {
                     actor->GetProperty()->SetPointSize(point_size);
-                    actor->GetMapper()->SetScalarRange(scalar_range[0], scalar_range[1]);
-
                     actor = collection->GetNextActor();
                 }
                 _vtk_context.renderer->SetRenderWindow(_vtk_context.render_window);
@@ -286,6 +340,8 @@ namespace viz3d {
             BackgroundPopup();
             ImGui::SameLine();
             RenderingPopup();
+            ImGui::SameLine();
+            ColorRangePopup();
             ImGui::PopStyleVar();
         }
     }
@@ -318,5 +374,6 @@ namespace viz3d {
         _vtk_context.renderer = nullptr;
         _vtk_context.is_initialized = false;
     }
+
 
 }

@@ -55,6 +55,8 @@ namespace viz3d {
 
     protected:
 
+        void ColorRangePopup();
+
         void RenderingPopup();
 
         void BackgroundPopup();
