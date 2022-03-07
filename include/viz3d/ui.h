@@ -65,9 +65,11 @@ namespace viz3d {
 
         GUI &operator=(const GUI &) = delete;
 
+        // Signal the engine to close
+        void SignalClose();
+
     private:
         explicit GUI(std::string &&winname = "GUI Window");
-
 
         struct GLFWContext {
             GLFWwindow *window;

@@ -244,9 +244,9 @@ namespace viz3d {
             auto collection = _vtk_context.renderer->GetActors();
 
             if (ImGui::Button("Set to Min-Max", ImVec2(button_size.x * 2, button_size.y))) {
-                auto actor = collection->GetLastActor();
+                collection->InitTraversal();
+                auto actor = collection->GetNextActor();
                 double min_max[2] = {std::numeric_limits<float>::max(), std::numeric_limits<float>::min()};
-
                 double actor_min_max[2];
                 while (actor) {
                     auto scalars = actor->GetMapper()->GetInput()->GetPointData()->GetScalars();
@@ -259,7 +259,8 @@ namespace viz3d {
                     }
                     actor = collection->GetNextActor();
                 }
-                actor = collection->GetLastActor();
+                collection->InitTraversal();
+                actor = collection->GetNextActor();
                 while (actor)
                 {
                     actor->GetMapper()->SetScalarRange(min_max);
@@ -268,7 +269,8 @@ namespace viz3d {
             }
 
             if (ImGui::Button("Apply", button_size)) {
-                auto actor = collection->GetLastActor();
+                collection->InitTraversal();
+                auto actor = collection->GetNextActor();
                 while (actor) {
                     actor->GetMapper()->SetScalarRange(scalar_range[0], scalar_range[1]);
                     actor = collection->GetNextActor();

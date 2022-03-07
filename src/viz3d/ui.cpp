@@ -129,6 +129,7 @@ namespace viz3d {
         ImGui_ImplGlfw_Shutdown();
         ImPlot::DestroyContext();
         ImGui::DestroyContext();
+        remain_open = true;
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -279,6 +280,11 @@ namespace viz3d {
     /* -------------------------------------------------------------------------------------------------------------- */
     void GUI::LaunchMainLoop(std::string &&window_name) {
         Instance(std::move(window_name)).MainLoop();
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void GUI::SignalClose() {
+        remain_open = false;
     }
 
 
