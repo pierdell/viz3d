@@ -60,8 +60,11 @@ namespace viz3d {
         render_window->AddRenderer(renderer);
         render_window->SetInteractor(interactor);
 
-        for (auto &actor: actors_)
+        for (auto &actor: actors_) {
+            actor->GetProperty()->SetPointSize(imgui_vars_.point_size);
+            actor->GetProperty()->SetLineWidth(imgui_vars_.line_width);
             renderer->AddActor(actor);
+        }
 
         _vtk_context.render_window = render_window;
         _vtk_context.FBOId = 0;
@@ -300,17 +303,13 @@ namespace viz3d {
         if (ImGui::Button("Rendering Options"))
             ImGui::OpenPopup("rendering_options");
 
-
         if (ImGui::BeginPopup("rendering_options")) {
             ImGui::Text("Rendering Options:");
             ImGui::Separator();
 
-            static bool with_edl_shader = false;
-            static float point_size = 2.f, line_width = 2.f;
-
-            ImGui::Checkbox("With EDL Shader", &with_edl_shader);
-            ImGui::DragFloat("Point Size", &point_size, 0.2f, 1.0f, 20.0f);
-            ImGui::DragFloat("Line Width", &line_width, 0.2f, 1.0f, 20.0f);
+            ImGui::Checkbox("With EDL Shader", &imgui_vars_.with_edl_shader);
+            ImGui::DragFloat("Point Size", &imgui_vars_.point_size, 0.2f, 1.0f, 20.0f);
+            ImGui::DragFloat("Line Width", &imgui_vars_.line_width, 0.2f, 1.0f, 20.0f);
 
             ImVec2 button_size = ImVec2(
                     (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().FramePadding.x) * 0.5f,
@@ -320,7 +319,7 @@ namespace viz3d {
                 _vtk_context.renderer->ReleaseGraphicsResources(_vtk_context.render_window);
                 _vtk_context.renderer->SetRenderWindow(nullptr);
 
-                if (with_edl_shader) {
+                if (imgui_vars_.with_edl_shader) {
                     auto basicPasses = vtkSmartPointer<vtkRenderStepsPass>::New();
                     auto edl = vtkSmartPointer<vtkEDLShading>::New();
                     edl->SetDelegatePass(basicPasses);
@@ -334,8 +333,8 @@ namespace viz3d {
                 collection->InitTraversal();
                 auto actor = collection->GetNextActor();
                 while (actor) {
-                    actor->GetProperty()->SetPointSize(point_size);
-                    actor->GetProperty()->SetLineWidth(line_width);
+                    actor->GetProperty()->SetPointSize(imgui_vars_.point_size);
+                    actor->GetProperty()->SetLineWidth(imgui_vars_.line_width);
                     actor = collection->GetNextActor();
                 }
                 _vtk_context.renderer->SetRenderWindow(_vtk_context.render_window);

@@ -56,6 +56,12 @@ namespace viz3d {
 
     protected:
 
+        struct ImGuiVars_ {
+            float point_size = 2.;
+            float line_width = 2.;
+            bool with_edl_shader = false;
+        } imgui_vars_;
+
         void ColorRangePopup();
 
         void RenderingPopup();
@@ -70,7 +76,6 @@ namespace viz3d {
             bool show_window = true;
             int vport_size[2] = {640, 480};
             bool is_initialized = false;
-            bool with_edl_shader = false;
 
             // OpenGL Ids
             GLuint FBOId = 0; //< FrameBuffer Id
