@@ -15,6 +15,7 @@
 namespace viz3d {
 
     namespace {
+
         void VTKCreateTimerCallback(vtkObject *caller, unsigned long eventId, void *clientData, void *callData) {
             // What I am supposed to do ?
             std::cout << "Called " << std::endl;
@@ -162,10 +163,17 @@ namespace viz3d {
 
     /* -------------------------------------------------------------------------------------------------------------- */
     void VTKWindow::DrawImGUIContent() {
-
         if (!_vtk_context.is_initialized) {
             LOG(WARNING) << "";
             return;
+        }
+
+        {
+            std::lock_guard<std::mutex> lockGuard(actors_management_mutex_);
+            for (auto &actor: actors_to_remove_) {
+                _vtk_context.renderer->RemoveActor(actor);
+            }
+            actors_to_remove_.clear();
         }
 
         DrawImGuiWindowConfigurations();
@@ -193,8 +201,10 @@ namespace viz3d {
 
     /* -------------------------------------------------------------------------------------------------------------- */
     void VTKWindow::RemoveActor(vtkSmartPointer<vtkActor> actor) {
-        CHECK(_vtk_context.render_window != nullptr) << "The VTK Window has not been initialized";
-        _vtk_context.renderer->RemoveActor(actor);
+        std::lock_guard<std::mutex> lock(actors_management_mutex_);
+        if (_vtk_context.render_window != nullptr)
+            actors_to_remove_.emplace(actor); //< We need to remove the actor from the window
+        actors_.erase(actor);
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -379,6 +389,10 @@ namespace viz3d {
         _vtk_context.interactor_style = nullptr;
         _vtk_context.renderer = nullptr;
         _vtk_context.is_initialized = false;
+        {
+            std::lock_guard lock(actors_management_mutex_);
+            actors_to_remove_.clear();
+        }
     }
 
 

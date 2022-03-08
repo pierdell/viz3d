@@ -2,6 +2,9 @@
 #define VIZ3D_VTK_WINDOW_H
 
 #include <set>
+#include <mutex>
+
+#include <glog/logging.h>
 
 #include <viz3d/ui.h>
 
@@ -12,10 +15,8 @@
 #include <vtkCallbackCommand.h>
 #include <vtkInteractorStyle.h>
 #include <vtkGenericRenderWindowInteractor.h>
-
-#include <glog/logging.h>
-
 #include <vtkAutoInit.h>
+
 
 VTK_MODULE_INIT(vtkRenderingOpenGL2);
 
@@ -78,7 +79,8 @@ namespace viz3d {
 
         } _vtk_context;
 
-        std::set<vtkSmartPointer<vtkActor>> actors_;
+        std::set<vtkSmartPointer<vtkActor>> actors_, actors_to_remove_;
+        std::mutex actors_management_mutex_;
 
         static void VTKIsCurrentCallback(vtkObject *caller, long unsigned int eventId, void *clientData,
                                          void *callData);

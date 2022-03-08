@@ -3,6 +3,7 @@ project(VIZ3D-EXTERNAL)
 
 option(BUILD_GLOG "Whether to build GLOG" ON)
 option(BUILD_EIGEN "Whether to build EIGEN" ON)
+option(BUILD_GTEST "Whether to build GTest" OFF)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -11,6 +12,7 @@ include(ExternalProject)
 
 include(${CMAKE_CURRENT_SOURCE_DIR}/../cmake/global_vars.cmake)
 set(GLOBAL_RUNTIME_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../bin)
+
 
 if (BUILD_GLOG)
     # INSTALL GLOG
