@@ -258,12 +258,14 @@ namespace viz3d {
                     }
                     actor = collection->GetNextActor();
                 }
-                collection->InitTraversal();
-                actor = collection->GetNextActor();
-                while (actor)
-                {
-                    actor->GetMapper()->SetScalarRange(min_max);
+                if (min_max[0] != std::numeric_limits<float>::max() &&
+                    min_max[1] != std::numeric_limits<float>::min()) {
+                    collection->InitTraversal();
                     actor = collection->GetNextActor();
+                    while (actor) {
+                        actor->GetMapper()->SetScalarRange(min_max);
+                        actor = collection->GetNextActor();
+                    }
                 }
             }
 
@@ -294,9 +296,11 @@ namespace viz3d {
             ImGui::Separator();
 
             static bool with_edl_shader = false;
-            static float point_size = 1.;
+            static float point_size = 2.f, line_width = 2.f;
+
             ImGui::Checkbox("With EDL Shader", &with_edl_shader);
             ImGui::DragFloat("Point Size", &point_size, 0.2f, 1.0f, 20.0f);
+            ImGui::DragFloat("Line Width", &line_width, 0.2f, 1.0f, 20.0f);
 
             ImVec2 button_size = ImVec2(
                     (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().FramePadding.x) * 0.5f,
@@ -321,6 +325,7 @@ namespace viz3d {
                 auto actor = collection->GetNextActor();
                 while (actor) {
                     actor->GetProperty()->SetPointSize(point_size);
+                    actor->GetProperty()->SetLineWidth(line_width);
                     actor = collection->GetNextActor();
                 }
                 _vtk_context.renderer->SetRenderWindow(_vtk_context.render_window);

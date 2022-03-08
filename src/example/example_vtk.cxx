@@ -13,6 +13,7 @@
 #include <vtkStructuredPoints.h>
 #include <vtkPointData.h>
 #include <vtkFloatArray.h>
+#include <vtkCellData.h>
 
 #include <Eigen/Dense>
 
@@ -100,6 +101,68 @@ auto GetConeActor() {
     return coneActor;
 }
 
+// Get Lines Actor
+auto GetLineActor() {
+    const auto num_lines = 10;
+    const auto num_points = num_lines + 1;
+
+    auto poly_data = vtkSmartPointer<vtkPolyData>::New();
+
+    // Setup the array of points
+    auto vtk_points = vtkSmartPointer<vtkPoints>::New();
+    vtk_points->SetDataTypeToFloat();
+    vtk_points->Allocate(num_points);
+    vtk_points->SetNumberOfPoints(num_points);
+    vtk_points->GetData()->SetName("Points_XYZ");
+    poly_data->SetPoints(vtk_points.GetPointer());
+
+    // Assign for each cell vertex indices
+    auto cell_ids = vtkSmartPointer<vtkIdTypeArray>::New();
+    cell_ids->SetNumberOfValues(num_lines * 3);
+    vtkIdType *ids = cell_ids->GetPointer(0);
+    for (vtkIdType line_id = 0; line_id < num_lines; ++line_id) {
+        auto cell_id = line_id * 3;
+        ids[cell_id] = 2; // num points in the cell = 2
+        ids[cell_id + 1] = line_id; // origin pid
+        ids[cell_id + 2] = line_id + 1; // pid of the endpoint of the line
+    }
+
+    double scale = 5.;
+
+    vtkSmartPointer<vtkCellArray> cellArray = vtkSmartPointer<vtkCellArray>::New();
+    cellArray->SetCells(num_lines, cell_ids.GetPointer());
+    poly_data->SetLines(cellArray);
+
+    auto color_field = vtkSmartPointer<vtkFloatArray>::New();
+    color_field->Allocate(num_lines);
+    color_field->SetName("Scalar");
+    color_field->SetNumberOfTuples(num_points);
+    poly_data->GetCellData()->AddArray(color_field);
+
+    Eigen::Vector3f previous_point = Eigen::Vector3f::Random() * scale;
+    for (auto line_idx(0); line_idx < num_lines; line_idx++) {
+
+        if (line_idx == 0)
+            vtk_points->SetPoint(0, previous_point.data());
+
+        Eigen::Vector3f new_point = Eigen::Vector3f::Random() * scale;
+        vtk_points->SetPoint(line_idx + 1, new_point.data());
+        previous_point = new_point;
+
+        color_field->SetValue(line_idx, float(line_idx) / (num_lines - 1));
+    }
+    poly_data->GetCellData()->SetActiveScalars("Scalar");
+
+
+    vtkNew<vtkPolyDataMapper> polydata_mapper;
+    polydata_mapper->SetInputData(poly_data.Get());
+
+    vtkNew<vtkActor> poly_data_actor;
+    poly_data_actor->SetMapper(polydata_mapper);
+
+    return poly_data_actor;
+}
+
 int main(int argc, char **argv) {
     auto &gui = viz3d::GUI::Instance();
     gui.AddWindow(std::make_shared<TestWindow>("Test Window"));
@@ -114,6 +177,7 @@ int main(int argc, char **argv) {
     {
         auto vtk_window2 = std::make_shared<viz3d::VTKWindow>("VTK Window 2");
         vtk_window2->AddActor(GetPointCloudActor());
+        vtk_window2->AddActor(GetLineActor());
         window_id = gui.AddWindow(vtk_window2);
     }
 
