@@ -197,6 +197,8 @@ namespace viz3d {
 
     /* -------------------------------------------------------------------------------------------------------------- */
     void VTKWindow::AddActor(vtkSmartPointer<vtkActor> actor) {
+        actor->GetProperty()->SetPointSize(imgui_vars_.point_size);
+        actor->GetProperty()->SetLineWidth(imgui_vars_.line_width);
         actors_.insert(actor);
         if (_vtk_context.is_initialized)
             _vtk_context.renderer->AddActor(actor);
