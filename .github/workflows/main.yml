@@ -2,14 +2,11 @@ name: build
 on: 
   push:
     branches:
-      - pdell-test_gihub_action
+      - master
     paths-ignore:
       - '**.md'
       - 'LICENSE'
       - '.gitignore'
-      - 'docker-compose.yml'
-      - '.dockerignore'
-      - 'assets/**'
 jobs:
   build:
     runs-on: ubuntu-18.04
