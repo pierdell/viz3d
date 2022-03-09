@@ -1,12 +1,15 @@
 # This module sets the following variables:
 # * viz3d_FOUND - viz3d if tclap found on the system
 # * viz3d_INCLUDE_DIRS - the directory containing viz3d headers
+set(VIZ3D_VERSION @CMAKE_PROJECT_VERSION@)
 @PACKAGE_INIT@
 
 if(NOT TARGET viz3d)
   include("${CMAKE_CURRENT_LIST_DIR}/viz3dTargets.cmake")
   get_target_property(viz3d_INCLUDE_DIRS viz3d INTERFACE_INCLUDE_DIRECTORIES)
 endif()
+
+check_required_components(viz3d)
 
 set(INSTALL_ROOT @INSTALL_ROOT@)
 # Load the target glad with viz3d
@@ -25,5 +28,46 @@ if (NOT glfw_FOUND)
    find_package(glfw3 REQUIRED CONFIG PATHS ${GLFW_DIR} NO_DEFAULT_PATH)
 endif()
 
-# -- Finds the package OpenGL on disk
+# Load the target OpenGL with viz3d if not already loaded
 find_package(OpenGL REQUIRED)
+
+# Find VTK
+if (NOT VTK_FOUND)
+    if (NOT VTK_COMPONENTS)
+        set(VTK_COMPONENTS        CommonColor
+                                  CommonComputationalGeometry
+                                  CommonCore
+                                  CommonDataModel
+                                  CommonSystem
+                                  CommonTransforms
+                                  FiltersCore
+                                  FiltersGeneral
+                                  FiltersGeometry
+                                  FiltersModeling
+                                  FiltersSources
+                                  IOGeometry
+                                  IOImage
+                                  IOLegacy
+                                  IOPLY
+                                  IOParallel
+                                  IOXML
+                                  ImagingCore
+                                  ImagingHybrid
+                                  ImagingSources
+                                  InteractionImage
+                                  InteractionStyle
+                                  InteractionWidgets
+                                  RenderingAnnotation
+                                  RenderingContextOpenGL2
+                                  RenderingCore
+                                  RenderingFreeType
+                                  RenderingGL2PSOpenGL2
+                                  RenderingOpenGL2)
+    endif()
+
+    if (NOT VTK_DIR)
+           set(VTK_DIR ${INSTALL_ROOT}/vtk/lib/cmake/vtk-9.1)
+    endif()
+    find_package(VTK REQUIRED COMPONENTS ${VTK_COMPONENTS} CONFIG PATHS ${VTK_DIR} NO_DEFAULT_PATH)
+endif()
+

@@ -10,3 +10,4 @@ cmake-build-minsizerel*
 bin/*
 install/*
 
+imgui.ini
