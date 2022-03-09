@@ -15,7 +15,7 @@ jobs:
       - name: Install Dependencies
         run: |
           sudo apt-get update
-          sudo apt-get install -y gcc-multilib g++-multilib libfreetype6-dev freeglut3-dev
+          sudo apt-get install -y gcc-multilib g++-multilib libfreetype6-dev freeglut3-dev libxrandr
       - name: Run install.sh
         run: ./install.sh
 
