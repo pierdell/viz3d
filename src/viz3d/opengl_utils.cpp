@@ -1,4 +1,4 @@
-#include "opengl_utils.hpp"
+#include <viz3d/opengl_utils.h>
 #include <math.h>
 
 #include <glad/glad.h>

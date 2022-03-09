@@ -1,4 +1,4 @@
-#include "shader.hpp"
+#include <viz3d/shader.h>
 
 namespace viz {
 

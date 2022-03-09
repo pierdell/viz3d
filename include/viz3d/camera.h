@@ -5,8 +5,8 @@
 #ifndef LIDAR_SFM_CAMERA_HPP
 #define LIDAR_SFM_CAMERA_HPP
 
-#include "types.hpp"
-#include "opengl_utils.hpp"
+#include "types.h"
+#include "opengl_utils.h"
 
 namespace viz {
 

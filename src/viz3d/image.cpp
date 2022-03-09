@@ -1,10 +1,10 @@
-#include "image.hpp"
+#include <viz3d/image.h>
 
 #ifndef STB_IMAGE_WRITE_IMPLEMENTATION
 #define STB_IMAGE_WRITE_IMPLEMENTATION
 #endif
 
-#include "stb_image_write.h"
+#include <viz3d/stb_image_write.h>
 
 
 namespace viz {

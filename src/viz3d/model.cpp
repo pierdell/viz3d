@@ -1,5 +1,5 @@
-#include "model.hpp"
-#include "opengl_utils.hpp"
+#include <viz3d/model.h>
+#include <viz3d/opengl_utils.h>
 #include <array>
 
 namespace viz {

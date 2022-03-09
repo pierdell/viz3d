@@ -1,0 +1,29 @@
+# This module sets the following variables:
+# * viz3d_FOUND - viz3d if tclap found on the system
+# * viz3d_INCLUDE_DIRS - the directory containing viz3d headers
+@PACKAGE_INIT@
+
+if(NOT TARGET viz3d)
+  include("${CMAKE_CURRENT_LIST_DIR}/viz3dTargets.cmake")
+  get_target_property(viz3d_INCLUDE_DIRS viz3d INTERFACE_INCLUDE_DIRECTORIES)
+endif()
+
+set(INSTALL_ROOT @INSTALL_ROOT@)
+# Load the target glad with viz3d
+if (NOT glad_FOUND)
+    if (NOT GLAD_DIR)
+       set(GLAD_DIR ${INSTALL_ROOT}/glad/lib/cmake/glad)
+    endif()
+    find_package(glad REQUIRED CONFIG PATHS ${GLAD_DIR} NO_DEFAULT_PATH)
+endif()
+
+# Load the target glfw with viz3d if not already loaded
+if (NOT glfw_FOUND)
+   if (NOT GLFW_DIR)
+        set(GLFW_DIR ${INSTALL_ROOT}/glfw/lib/cmake/glfw3)
+   endif()
+   find_package(glfw3 REQUIRED CONFIG PATHS ${GLFW_DIR} NO_DEFAULT_PATH)
+endif()
+
+# -- Finds the package OpenGL on disk
+find_package(OpenGL REQUIRED)

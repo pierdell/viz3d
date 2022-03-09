@@ -8,5 +8,5 @@ cmake-build-relwithdebinfo*
 cmake-build-minsizerel*
 
 bin/*
-
+install/*
 

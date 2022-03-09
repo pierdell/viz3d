@@ -17,9 +17,9 @@ struct ImGuiIO;
 #include <mutex>
 
 // Project
-#include "model.hpp"
-#include "camera.hpp"
-#include "shader.hpp"
+#include "model.h"
+#include "camera.h"
+#include "shader.h"
 
 struct ImGuiIO;
 

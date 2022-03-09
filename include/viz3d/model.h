@@ -6,7 +6,7 @@
 #include <Eigen/StdVector>
 #include <glog/logging.h>
 
-#include "types.hpp"
+#include "types.h"
 
 #include <glad/glad.h>
 #include <GL/gl.h>

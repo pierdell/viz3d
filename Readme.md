@@ -77,7 +77,7 @@ gui_thread.join();
 > The following adds a PointCloud Model to the Engine:
 
 ```
-#include <viz3d/engine.hpp>
+#include <viz3d/engine.h>
 
 auto& instance = ExplorationEngine::Instance();
 

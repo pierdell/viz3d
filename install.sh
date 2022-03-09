@@ -8,6 +8,8 @@ fi
 CMakeGenerator="Unix Makefiles"
 src_dir=$(pwd)
 build_dir=${src_dir}/cmake-build-${BUILD_TYPE}
+install_dir=${src_dir}/install
+
 mkdir "${build_dir}"
 mkdir "${build_dir}/external"
 
@@ -19,7 +21,7 @@ cd "${build_dir}/external"
 check_command
 
 echo "[CT_ICP] -- Generating External Dependencies";
-cmake -G "${CMakeGenerator}" -S ${src_dir}/external
+cmake -G "${CMakeGenerator}" -S ${src_dir}/external -DINSTALL_DIR=${install_dir}
 check_command
 
 echo "[CT_ICP] -- Building External Dependencies"
@@ -28,7 +30,7 @@ check_command
 
 echo "[CT_ICP] -- Generating CMake File"
 cd ${build_dir}
-cmake -G "${CMakeGenerator}" -S ${src_dir}
+cmake -G "${CMakeGenerator}" -S ${src_dir} -DINSTALL_DIR=${install_dir}
 check_command
 
 echo "[CT_ICP] -- Building Main Project"
