@@ -26,6 +26,7 @@ mkdir "${build_dir}"
 mkdir "${build_dir}/external"
 
 
+
 check_status_code() {
    if [ $1 -ne 0 ]
    then

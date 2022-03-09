@@ -29,7 +29,7 @@ if (NOT glfw_FOUND)
 endif()
 
 # Load the target OpenGL with viz3d if not already loaded
-find_package(OpenGL)
+find_package(OpenGL REQUIRED)
 
 # Find VTK
 if (NOT VTK_FOUND)
@@ -70,3 +70,4 @@ if (NOT VTK_FOUND)
     endif()
     find_package(VTK REQUIRED COMPONENTS ${VTK_COMPONENTS} CONFIG PATHS ${VTK_DIR} NO_DEFAULT_PATH)
 endif()
+

@@ -1,0 +1,24 @@
+name: build
+on: 
+  push:
+    branches:
+      - master
+    paths-ignore:
+      - '**.md'
+      - 'LICENSE'
+      - '.gitignore'
+jobs:
+  build:
+    runs-on: ubuntu-18.04
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install Dependencies
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y libsdl2-dev gcc-multilib g++-multilib libfreetype6-dev libvulkan-dev freeglut3-dev libxrandr-dev libglfw3-dev
+      - name: Run install.sh
+        run: ./install.sh
+
+
+        
+    

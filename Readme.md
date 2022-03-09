@@ -6,6 +6,7 @@
 > and [VTK](https://gitlab.kitware.com/vtk/vtk), the Visualization ToolKit.
 >
 
+
 ## Description
 
 > The library is a simple application layer the singleton `GUI`, which opens a `GLFW` window,
