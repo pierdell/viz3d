@@ -1,9 +1,9 @@
 cmake_minimum_required(VERSION 3.14)
 project(VIZ3D-EXTERNAL)
 
-option(BUILD_GLOG "Whether to build GLOG" ON)
-option(BUILD_EIGEN "Whether to build EIGEN" ON)
-option(BUILD_GTEST "Whether to build GTest" OFF)
+option(BUILD_GLOG "Whether to build GLOG from sources" ON)
+option(BUILD_EIGEN "Whether to download EIGEN sources" ON)
+option(BUILD_VTK "Whether to build VTK from sources" ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -86,26 +86,28 @@ ExternalProject_Add(
 
         BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install)
 
-# INSTALL VTK
-ExternalProject_Add(
-        vtk
-        PREFIX vtk
+if (BUILD_VTK)
+    # INSTALL VTK FROM SOURCES
+    ExternalProject_Add(
+            vtk
+            PREFIX vtk
 
-        GIT_REPOSITORY https://gitlab.kitware.com/vtk/vtk.git
-        GIT_TAG v9.1.0
+            GIT_REPOSITORY https://gitlab.kitware.com/vtk/vtk.git
+            GIT_TAG v9.1.0
 
-        BUILD_ALWAYS OFF
-        INSTALL_DIR ${INSTALL_ROOT}/vtk
-        CMAKE_ARGS
-        -DCMAKE_INSTALL_PREFIX=${INSTALL_ROOT}/vtk
-        -DCMAKE_POSITION_INDEPENDENT_CODE=ON
-        -DVTK_USE_CUDA=OFF
-        -DVTK_BUILD_EXAMPLES=ON
-        -DVTK_BUILD_DOCUMENTATION=OFF
-        -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
-        -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
-        -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
-        -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE
-        -DCMAKE_INSTALL_RPATH=${INSTALL_ROOT}/vtk/lib
+            BUILD_ALWAYS OFF
+            INSTALL_DIR ${INSTALL_ROOT}/vtk
+            CMAKE_ARGS
+            -DCMAKE_INSTALL_PREFIX=${INSTALL_ROOT}/vtk
+            -DCMAKE_POSITION_INDEPENDENT_CODE=ON
+            -DVTK_USE_CUDA=OFF
+            -DVTK_BUILD_EXAMPLES=ON
+            -DVTK_BUILD_DOCUMENTATION=OFF
+            -DCMAKE_C_COMPILER=${CMAKE_C_COMPILER}
+            -DCMAKE_CXX_COMPILER=${CMAKE_CXX_COMPILER}
+            -DCMAKE_BUILD_TYPE=${CMAKE_BUILD_TYPE}
+            -DCMAKE_INSTALL_RPATH_USE_LINK_PATH=TRUE
+            -DCMAKE_INSTALL_RPATH=${INSTALL_ROOT}/vtk/lib
 
-        BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install --parallel 6)
+            BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install --parallel 6)
+endif ()
