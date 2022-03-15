@@ -175,8 +175,19 @@ namespace viz3d {
             std::lock_guard<std::mutex> lockGuard(actors_management_mutex_);
             for (auto &actor: actors_to_remove_) {
                 _vtk_context.renderer->RemoveActor(actor);
+                actors_.erase(actor);
+                actors_to_add_.erase(actor);
             }
             actors_to_remove_.clear();
+        }
+
+        {
+            std::lock_guard<std::mutex> lockGuard(actors_management_mutex_);
+            for (auto &actor: actors_to_add_) {
+                _vtk_context.renderer->AddActor(actor);
+                actors_.insert(actor);
+            }
+            actors_to_add_.clear();
         }
 
         DrawImGuiWindowConfigurations();
@@ -197,11 +208,10 @@ namespace viz3d {
 
     /* -------------------------------------------------------------------------------------------------------------- */
     void VTKWindow::AddActor(vtkSmartPointer<vtkActor> actor) {
+        std::lock_guard<std::mutex> lock(actors_management_mutex_);
         actor->GetProperty()->SetPointSize(imgui_vars_.point_size);
         actor->GetProperty()->SetLineWidth(imgui_vars_.line_width);
-        actors_.insert(actor);
-        if (_vtk_context.is_initialized)
-            _vtk_context.renderer->AddActor(actor);
+        actors_to_add_.insert(actor);
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -209,7 +219,7 @@ namespace viz3d {
         std::lock_guard<std::mutex> lock(actors_management_mutex_);
         if (_vtk_context.render_window != nullptr)
             actors_to_remove_.emplace(actor); //< We need to remove the actor from the window
-        actors_.erase(actor);
+
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
