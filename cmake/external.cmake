@@ -30,9 +30,10 @@ endif ()
 
 # -- GLAD
 if (NOT GLAD_DIR)
-    set(GLAD_DIR ${INSTALL_ROOT}/glad/lib/cmake)
+    set(GLAD_DIR ${INSTALL_ROOT}/glad/lib/cmake/glad)
+    message(INFO " [VIZ3D] -- Setting the glad cmake directory to: ${GLAD_DIR}")
 endif ()
-find_package(glad REQUIRED CONFIG PATHS ${GLAD_DIR})
+find_package(glad REQUIRED CONFIG PATHS ${GLAD_DIR} NO_DEFAULT_PATH)
 if (NOT TARGET glad::glad)
     message(FATAL_ERROR "${LOG_PREFIX}Could not load target glad")
 endif ()
@@ -131,12 +132,7 @@ endif ()
 
 
 # --  VTK
-if (NOT VTK_CMAKE_PATH)
-    set(VTK_CMAKE_PATH ${INSTALL_ROOT}/vtk/lib/cmake/vtk-9.1)
-    set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:${INSTALL_ROOT}/vtk/lib")
-endif ()
-set(VTK_LIBRARIES "")
-find_package(VTK CONFIG COMPONENTS
+set(VTK_REQUIRED_COMPONENTS
         CommonColor
         CommonComputationalGeometry
         CommonCore
@@ -167,5 +163,18 @@ find_package(VTK CONFIG COMPONENTS
         RenderingGL2PSOpenGL2
         RenderingOpenGL2
         OPTIONAL_COMPONENTS
-        TestingRendering
-        PATHS ${VTK_CMAKE_PATH} NO_DEFAULT_PATH)
+        TestingRendering)
+
+if (BUILD_VTK)
+    if (NOT VTK_CMAKE_PATH)
+        set(VTK_CMAKE_PATH ${INSTALL_ROOT}/vtk/lib/cmake/vtk-9.1)
+        set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_RPATH}:${INSTALL_ROOT}/vtk/lib")
+    endif ()
+    set(VTK_LIBRARIES "")
+    find_package(VTK 9.1 REQUIRED CONFIG COMPONENTS ${VTK_REQUIRED_COMPONENTS} PATHS ${VTK_CMAKE_PATH} NO_DEFAULT_PATH)
+else ()
+    set(VTK_LIBRARIES "")
+    find_package(VTK 9.1 REQUIRED COMPONENTS ${VTK_REQUIRED_COMPONENTS})
+    get_property(VTK_COMMON_CORE_LOCATION TARGET VTK::CommonCore PROPERTY LOCATION)
+    message (STATUS " [VIZ3D] VTK::CommonCore target found at location : ${VTK_COMMON_CORE_LOCATION}")
+endif ()

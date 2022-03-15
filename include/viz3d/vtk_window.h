@@ -84,7 +84,7 @@ namespace viz3d {
 
         } _vtk_context;
 
-        std::set<vtkSmartPointer<vtkActor>> actors_, actors_to_remove_;
+        std::set<vtkSmartPointer<vtkActor>> actors_, actors_to_remove_, actors_to_add_;
         std::mutex actors_management_mutex_;
 
         static void VTKIsCurrentCallback(vtkObject *caller, long unsigned int eventId, void *clientData,

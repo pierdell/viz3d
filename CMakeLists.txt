@@ -5,6 +5,7 @@ set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
 
 option(BUILD_TESTS "Whether to build tests with GTest (requires GTest)" OFF)
+option(BUILD_VTK "Whether vtk was built from the sources" ON)
 
 include(cmake/global_vars.cmake)
 include(cmake/external.cmake)
