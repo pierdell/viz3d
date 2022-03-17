@@ -24,7 +24,7 @@ namespace viz3d {
             auto &style = ImGui::GetStyle();
 
             style.FrameBorderSize = 1.0;
-            style.FrameRounding = 12.;
+            style.FrameRounding = 0.;
 
             // Setup default padding
             style.WindowPadding = ImVec2(2, 2);
