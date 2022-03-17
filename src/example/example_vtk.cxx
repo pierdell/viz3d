@@ -4,6 +4,7 @@
 
 #include <viz3d/ui.h>
 #include <viz3d/vtk_window.h>
+#include <misc/cpp/imgui_stdlib.h>
 
 #include <vtkConeSource.h>
 #include <vtkNamedColors.h>
@@ -25,7 +26,11 @@ struct TestWindow : viz3d::ImGuiWindow {
 
     void DrawImGUIContent() override {
         ImGui::Text("This is a Custom Defined ImGui Window !");
+        ImGui::InputText("Write a string", &test_string);
+        ImGui::Text(test_string.c_str());
     }
+
+    std::string test_string;
 };
 
 // A Point Cloud Actor (fills the content of a PolyData), with a scalar field

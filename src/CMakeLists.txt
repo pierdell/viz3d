@@ -36,6 +36,10 @@ install(FILES
         ${imgui_SOURCE_DIR}/imstb_truetype.h
         DESTINATION ${VIZ3D_INSTALL_DIR}/include)
 
+install(FILES
+        ${imgui_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
+        DESTINATION ${VIZ3D_INSTALL_DIR}/include/misc/cpp)
+
 if (NOT TARGET glfw)
     message(FATAL_ERROR "Could not find target glfw")
 endif ()

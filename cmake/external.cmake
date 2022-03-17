@@ -93,6 +93,7 @@ if (NOT imgui_POPULATED)
             ${_IMGUI_SOURCE_DIR}/imstb_rectpack.h
             ${_IMGUI_SOURCE_DIR}/imstb_textedit.h
             ${_IMGUI_SOURCE_DIR}/imstb_truetype.h
+            ${_IMGUI_SOURCE_DIR}/misc/cpp/imgui_stdlib.h
             ${IMPLOT_HDRS})
 
     set(SOURCES_CXX_FILES
@@ -101,6 +102,7 @@ if (NOT imgui_POPULATED)
             ${_IMGUI_SOURCE_DIR}/imgui_widgets.cpp
             ${_IMGUI_SOURCE_DIR}/imgui_tables.cpp
             ${_IMGUI_SOURCE_DIR}/imgui_demo.cpp
+            ${_IMGUI_SOURCE_DIR}/misc/cpp/imgui_stdlib.cpp
             ${IMPLOT_SRCS})
 
     file(GLOB FONTS_FILES ${FONTS_DIR}/*.ttf)
