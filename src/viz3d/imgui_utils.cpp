@@ -8,9 +8,9 @@ namespace viz3d {
     /* -------------------------------------------------------------------------------------------------------------- */
     const std::vector<std::pair<std::string, VTKColorMapType>> &ColorMapPairs() {
         static std::vector<std::pair<std::string, VTKColorMapType>> colormaps{
+                {"plasma",  PLASMA},
                 {"jet",     JET},
                 {"magma",   MAGMA},
-                {"plasma",  PLASMA},
                 {"inferno", INFERNO},
                 {"viridis", VIRIDIS}
         };

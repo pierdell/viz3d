@@ -289,14 +289,14 @@ namespace viz3d {
                 }
             }
 
-            combo.DrawCombo();
+            color_combo.DrawCombo();
 
             ImGui::Separator();
             auto button_size = ImGui_HorizontalButtonSize(0.5f);
             if (ImGui::Button("Apply", button_size)) {
                 collection->InitTraversal();
                 auto actor = collection->GetNextActor();
-                auto cmap = ColorMap(combo.GetSelectedColorMapType());
+                auto cmap = ColorMap(color_combo.GetSelectedColorMapType());
                 while (actor) {
                     auto *mapper = actor->GetMapper();
                     if (mapper) {

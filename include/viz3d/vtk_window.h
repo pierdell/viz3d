@@ -95,7 +95,7 @@ namespace viz3d {
 
         } _vtk_context;
 
-        ImGui_ColorMapCombo combo;
+        ImGui_ColorMapCombo color_combo;
 
         std::set<vtkSmartPointer<vtkActor>> actors_, actors_to_remove_, actors_to_add_;
         std::mutex actors_management_mutex_;
