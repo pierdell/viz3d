@@ -3,6 +3,9 @@
 #ifndef VIZ3D_UTILS_H
 #define VIZ3D_UTILS_H
 
+#include <string>
+#include <vtkLookupTable.h>
+
 #include <imgui.h>
 
 namespace viz3d {
@@ -29,6 +32,48 @@ namespace viz3d {
         return ImGui::Button(button_label, button_size);
     }
 
+    enum VTKColorMapType {
+        JET,
+        MAGMA,
+        PLASMA,
+        INFERNO,
+        VIRIDIS
+    };
+
+    /*!
+     * @brief   Returns a reference to a vector of color map names
+     */
+    const std::vector<std::pair<std::string, VTKColorMapType>> &ColorMapPairs();
+
+    /*!
+     * @brief   Returns a vtkLookupTable defining the specified colormap
+     */
+    vtkSmartPointer<vtkLookupTable> ColorMap(VTKColorMapType type = VIRIDIS);
+
+    // A Simple utility function to select a vtk color map via an ImGui Combo
+    struct ImGui_ColorMapCombo {
+
+        void DrawCombo();
+
+        inline VTKColorMapType GetSelectedColorMapType() const;
+
+        inline vtkSmartPointer<vtkLookupTable> GetSelectedColorMap() const;
+
+        int selected_idx = 0;
+    };
+
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// IMPLEMENTATIONS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    VTKColorMapType ImGui_ColorMapCombo::GetSelectedColorMapType() const {
+        return ColorMapPairs()[selected_idx].second;
+    }
+
+    vtkSmartPointer<vtkLookupTable> ImGui_ColorMapCombo::GetSelectedColorMap() const {
+        return ColorMap(GetSelectedColorMapType());
+    }
 
 }
 

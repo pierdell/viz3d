@@ -7,6 +7,8 @@
 #include <glog/logging.h>
 
 #include <viz3d/ui.h>
+#include "viz3d/imgui_utils.h"
+
 #include <imgui_internal.h>
 
 #include <vtkSmartPointer.h>
@@ -92,6 +94,8 @@ namespace viz3d {
             GLuint textureId = 0; //< Texture Id
 
         } _vtk_context;
+
+        ImGui_ColorMapCombo combo;
 
         std::set<vtkSmartPointer<vtkActor>> actors_, actors_to_remove_, actors_to_add_;
         std::mutex actors_management_mutex_;

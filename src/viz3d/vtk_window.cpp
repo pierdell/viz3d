@@ -289,15 +289,25 @@ namespace viz3d {
                 }
             }
 
+            combo.DrawCombo();
+
+            ImGui::Separator();
             auto button_size = ImGui_HorizontalButtonSize(0.5f);
             if (ImGui::Button("Apply", button_size)) {
                 collection->InitTraversal();
                 auto actor = collection->GetNextActor();
+                auto cmap = ColorMap(combo.GetSelectedColorMapType());
                 while (actor) {
-                    actor->GetMapper()->SetScalarRange(scalar_range[0], scalar_range[1]);
+                    auto *mapper = actor->GetMapper();
+                    if (mapper) {
+                        mapper->SetScalarRange(scalar_range[0], scalar_range[1]);
+                        mapper->SetLookupTable(cmap);
+                    }
                     actor = collection->GetNextActor();
+
                 }
             }
+
             ImGui::SameLine();
             if (ImGui_HorizontalButton("Close"))
                 ImGui::CloseCurrentPopup();
