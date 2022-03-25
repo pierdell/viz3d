@@ -11,15 +11,13 @@
 #include <vtkDataArray.h>
 #include <vtkPointData.h>
 #include <vtkCollectionIterator.h>
+#include "viz3d/imgui_utils.h"
 
 namespace viz3d {
 
     namespace {
 
-        void VTKCreateTimerCallback(vtkObject *caller, unsigned long eventId, void *clientData, void *callData) {
-            // What I am supposed to do ?
-            std::cout << "Called " << std::endl;
-        }
+        void VTKCreateTimerCallback(vtkObject *caller, unsigned long eventId, void *clientData, void *callData) {}
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -229,12 +227,12 @@ namespace viz3d {
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
-    void VTKWindow::BackgroundPopup() {
-        if (ImGui::Button("Background Color"))
+    void VTKWindow::BackgroundPopup(bool open) {
+        if (open)
             ImGui::OpenPopup("background_color");
         // Popup to select the Background color
         if (ImGui::BeginPopup("background_color")) {
-            ImGui::Text("Background Color:");
+            ImGui_CenteredText("Background Color");
             ImGui::Separator();
             ImVec2 button_size = ImVec2(
                     (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().FramePadding.x) * 0.5f,
@@ -254,20 +252,17 @@ namespace viz3d {
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
-    void VTKWindow::ColorRangePopup() {
-        if (ImGui::Button("Color Options"))
+    void VTKWindow::ColorRangePopup(bool open) {
+        if (open)
             ImGui::OpenPopup("color_options");
 
         if (ImGui::BeginPopup("color_options")) {
+            ImGui_CenteredText("Model Color Range");
             static float scalar_range[2] = {0.f, 1.f};
             ImGui::InputFloat2("Scalar Range", scalar_range);
-            ImVec2 button_size = ImVec2(
-                    (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().FramePadding.x) * 0.5f,
-                    2 * ImGui::GetFontSize());
-
             auto collection = _vtk_context.renderer->GetActors();
 
-            if (ImGui::Button("Set to Min-Max", ImVec2(button_size.x * 2, button_size.y))) {
+            if (ImGui_HorizontalButton("Set to Min-Max")) {
                 collection->InitTraversal();
                 auto actor = collection->GetNextActor();
                 double min_max[2] = {std::numeric_limits<float>::max(), std::numeric_limits<float>::min()};
@@ -294,6 +289,7 @@ namespace viz3d {
                 }
             }
 
+            auto button_size = ImGui_HorizontalButtonSize(0.5f);
             if (ImGui::Button("Apply", button_size)) {
                 collection->InitTraversal();
                 auto actor = collection->GetNextActor();
@@ -303,20 +299,19 @@ namespace viz3d {
                 }
             }
             ImGui::SameLine();
-            if (ImGui::Button("Close", button_size))
+            if (ImGui_HorizontalButton("Close"))
                 ImGui::CloseCurrentPopup();
             ImGui::EndPopup();
         }
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
-    void VTKWindow::RenderingPopup() {
-        // Popup to select
-        if (ImGui::Button("Rendering Options"))
+    void VTKWindow::RenderingPopup(bool open) {
+        if (open)
             ImGui::OpenPopup("rendering_options");
 
         if (ImGui::BeginPopup("rendering_options")) {
-            ImGui::Text("Rendering Options:");
+            ImGui_CenteredText("Rendering Options");
             ImGui::Separator();
 
             ImGui::Checkbox("With EDL Shader", &imgui_vars_.with_edl_shader);
@@ -354,23 +349,31 @@ namespace viz3d {
             ImGui::SameLine();
             if (ImGui::Button("Close", button_size))
                 ImGui::CloseCurrentPopup();
+
             ImGui::EndPopup();
         }
-
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
     void VTKWindow::DrawImGuiWindowConfigurations() {
-        // Setup the GUI Options
-        if (ImGui::CollapsingHeader("Window Configuration")) {
-            ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4.0, 4.0));
-            BackgroundPopup();
-            ImGui::SameLine();
-            RenderingPopup();
-            ImGui::SameLine();
-            ColorRangePopup();
-            ImGui::PopStyleVar();
+
+        ImGui::PushID("context_menu");
+        ImGui::MenuItem("Window Options", NULL, &imgui_vars_.open_window_options);
+        ImGui::PopID();
+
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4.0, 4.0));
+        ImGui::PushStyleVar(ImGuiStyleVar_WindowMinSize,
+                            ImVec2(ImGui::GetFontSize() * 20, ImGui::GetFontSize() * 6));
+
+        ImGuiWindowClass window_class;
+        window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoDockingOverMe;
+        ImGui::SetNextWindowClass(&window_class);
+        if (imgui_vars_.open_window_options &&
+            ImGui::Begin(options_winname_.c_str())) {
+            DrawSubordinatedImGuiContent();
+            ImGui::End();
         }
+        ImGui::PopStyleVar(2);
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -404,6 +407,34 @@ namespace viz3d {
             std::lock_guard lock(actors_management_mutex_);
             actors_to_remove_.clear();
         }
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    VTKWindow::VTKWindow(std::string &&winname) :
+            ImGuiWindow(std::move(winname)),
+            options_winname_(window_name_ + " Options") {}
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void VTKWindow::DrawSubordinatedImGuiContent() {
+        BackgroundPopup(ImGui_HorizontalButton("Background"));
+        RenderingPopup(ImGui_HorizontalButton("Rendering Options"));
+        ColorRangePopup(ImGui_HorizontalButton("Color Range"));
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void VTKWindow::Draw() {
+        ImGuiWindowClass window_class;
+        window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoDockingOverMe;
+        ImGui::SetNextWindowClass(&window_class);
+        if (!ImGui::Begin(window_name_.c_str())) {
+            imgui_vars_.open_window_options = false;
+            // Early out if the window is collapsed, as an optimization.
+            ImGui::End();
+            return;
+        }
+
+        DrawImGUIContent();
+        ImGui::End();
     }
 
 
