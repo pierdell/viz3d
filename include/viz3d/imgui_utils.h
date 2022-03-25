@@ -17,13 +17,18 @@ namespace viz3d {
     }
 
     // A Button of width equal to the whole available width
+    inline ImVec2 ImGui_HorizontalButtonSize(float window_ratio = 1.f) {
+        return ImVec2((ImGui::GetContentRegionAvail().x) * window_ratio,
+                      2 * ImGui::GetFontSize());
+    };
+
+    // A Button of width equal to the whole available width
     inline bool ImGui_HorizontalButton(const char *button_label,
                                        float window_ratio = 1.f) {
-        ImVec2 button_size = ImVec2((ImGui::GetContentRegionAvail().x) * window_ratio,
-                                    2 * ImGui::GetFontSize());
-        ImGui::SetNextItemWidth(ImGui::GetContentRegionAvailWidth());
+        auto button_size = ImGui_HorizontalButtonSize(window_ratio);
         return ImGui::Button(button_label, button_size);
     }
+
 
 }
 

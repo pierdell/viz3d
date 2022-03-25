@@ -37,21 +37,7 @@ namespace viz3d {
         // Adds a VTK Actor to the window, returns the Id of the Actor
         void AddActor(vtkSmartPointer<vtkActor> actor);
 
-        void Draw() override {
-            ImGuiWindowClass window_class1;
-            window_class1.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoDockingOverMe;
-            ImGui::SetNextWindowClass(&window_class1);
-            if (!ImGui::Begin(window_name_.c_str())) {
-                imgui_vars_.open_window_options = false;
-                // Early out if the window is collapsed, as an optimization.
-                ImGui::End();
-                return;
-            }
-
-            DrawImGUIContent();
-            ImGui::End();
-        }
-
+        void Draw() override;
 
         // Removes a VTK Actor from the window
         void RemoveActor(vtkSmartPointer<vtkActor> actor);
