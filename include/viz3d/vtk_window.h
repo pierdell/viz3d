@@ -7,6 +7,7 @@
 #include <glog/logging.h>
 
 #include <viz3d/ui.h>
+#include <imgui_internal.h>
 
 #include <vtkSmartPointer.h>
 #include <vtkActor.h>
@@ -28,13 +29,29 @@ namespace viz3d {
 
     class VTKWindow : public ImGuiWindow {
     public:
-        using ImGuiWindow::ImGuiWindow;
+        VTKWindow(std::string &&winname);
 
-        // Draws the content of the window
+        // Draws the ImGui content of the window, including the VTKWindow, and the
         void DrawImGUIContent() override;
 
         // Adds a VTK Actor to the window, returns the Id of the Actor
         void AddActor(vtkSmartPointer<vtkActor> actor);
+
+        void Draw() override {
+            ImGuiWindowClass window_class1;
+            window_class1.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoDockingOverMe;
+            ImGui::SetNextWindowClass(&window_class1);
+            if (!ImGui::Begin(window_name_.c_str())) {
+                imgui_vars_.open_window_options = false;
+                // Early out if the window is collapsed, as an optimization.
+                ImGui::End();
+                return;
+            }
+
+            DrawImGUIContent();
+            ImGui::End();
+        }
+
 
         // Removes a VTK Actor from the window
         void RemoveActor(vtkSmartPointer<vtkActor> actor);
@@ -42,7 +59,8 @@ namespace viz3d {
         // Initializes the VTK Context for the window, must be called before DrawImGUIContent is called
         virtual void InitializeVTKContext();
 
-        // Draws the ImGui components specifying the configuration of the window
+        // Draws the ImGui components in a subordinated window
+        // the subordinated window elements are drawn by calling DrawSubordinatedImGuiContent
         virtual void DrawImGuiWindowConfigurations();
 
         // Draws the VTK Window in a canvas of the ImGui Window
@@ -56,17 +74,22 @@ namespace viz3d {
 
     protected:
 
+        // Draws the elements of the subordinated window
+        virtual void DrawSubordinatedImGuiContent();
+
         struct ImGuiVars_ {
             float point_size = 2.;
             float line_width = 2.;
             bool with_edl_shader = false;
+            bool open_window_options = false;
         } imgui_vars_;
+        const std::string options_winname_;
 
-        void ColorRangePopup();
+        void ColorRangePopup(bool open = true);
 
-        void RenderingPopup();
+        void RenderingPopup(bool open = true);
 
-        void BackgroundPopup();
+        void BackgroundPopup(bool open = true);
 
         struct VTKWindowContext {
             vtkSmartPointer<vtkRenderWindow> render_window = nullptr;
