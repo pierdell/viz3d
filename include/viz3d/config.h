@@ -236,6 +236,7 @@ namespace viz3d {
 
     template<typename ValT>
     void ValueParam<ValT>::DrawHover() {
+        ImGui::TextDisabled("(?)");
         if (ImGui::IsItemHovered()) {
             ImGui::BeginTooltip();
             ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);

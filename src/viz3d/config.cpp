@@ -187,13 +187,17 @@ namespace viz3d {
         }                                       \
     }
 
+#define DRAW_HOVER \
+    ImGui::SameLine(); \
+    DrawHover();
+
     /* -------------------------------------------------------------------------------------------------------------- */
     // TextParam
     VIZ3D_VALUE_PARAM_SAVE_AND_LOAD(TextParam)
 
     void TextParam::Draw() {
         ImGui::InputText(label.c_str(), &value);
-        DrawHover();
+        DRAW_HOVER
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -202,7 +206,7 @@ namespace viz3d {
 
     void IntParam::Draw() {
         ImGui::InputInt(label.c_str(), &value);
-        DrawHover();
+        DRAW_HOVER
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -211,7 +215,7 @@ namespace viz3d {
 
     void FloatParam::Draw() {
         ImGui::InputFloat(label.c_str(), &value);
-        DrawHover();
+        DRAW_HOVER
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -220,7 +224,7 @@ namespace viz3d {
 
     void BoolParam::Draw() {
         ImGui::Checkbox(label.c_str(), &value);
-        DrawHover();
+        DRAW_HOVER
     }
 
 

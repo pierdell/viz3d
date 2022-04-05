@@ -97,9 +97,10 @@ namespace viz3d {
 
         // Initialize the config (look for the default config)
         auto default_conf_filepath = glfwContext.window_name + ".conf";
+        auto &global_config = GlobalConfig::Instance();
+        global_config.config_form.config_file_path = default_conf_filepath;
         if (std::filesystem::exists(default_conf_filepath)) {
-            auto &instance = GlobalConfig::Instance();
-            instance.LoadFromDisk(default_conf_filepath);
+            global_config.LoadFromDisk(default_conf_filepath);
         }
 
         // Initialize the GLFW Window and OpenGL context
@@ -146,6 +147,9 @@ namespace viz3d {
             glfwPollEvents();
         }
 
+        if (global_config.config_form.save_on_exit.value)
+            global_config.Persist();
+
         // End the context of each window
         for (auto &window: windows_)
             window.second->EndContext();
@@ -159,9 +163,7 @@ namespace viz3d {
         is_initialized_ = false;
         glfwContext.window = nullptr;
 
-        auto &instance = GlobalConfig::Instance();
-        if (instance.config_form.save_on_exit.value)
-            instance.Persist();
+
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
