@@ -36,7 +36,6 @@ namespace viz3d {
                     table->SetTableValue(7, 0.5, 0., 0.0);
                 }
                     break;
-
                 case VIRIDIS: {
                     table->SetNumberOfTableValues(256);
                     table->SetTableValue(0, 0.267004, 0.004874, 0.329415);
@@ -818,7 +817,6 @@ namespace viz3d {
                     table->SetTableValue(255, 0.940015, 0.975158, 0.131326);
                 }
                     break;
-                default:
                 case MAGMA: {
                     table->SetNumberOfTableValues(251);
                     table->SetTableValue(0, 0.001462, 0.000466, 0.013866);
@@ -1073,7 +1071,7 @@ namespace viz3d {
                     table->SetTableValue(249, 0.987387, 0.984288, 0.742002);
                     table->SetTableValue(250, 0.987053, 0.991438, 0.749504);
                 }
-
+                    break;
             }
             return table;
 
