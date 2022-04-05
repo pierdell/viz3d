@@ -158,6 +158,10 @@ namespace viz3d {
         remain_open = true;
         is_initialized_ = false;
         glfwContext.window = nullptr;
+
+        auto &instance = GlobalConfig::Instance();
+        if (instance.config_form.save_on_exit.value)
+            instance.Persist();
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -267,7 +271,7 @@ namespace viz3d {
                 if (ImGui::BeginMenu("Config")) {
                     ImGui::MenuItem("Show Config Parameters", NULL, &show_config_window);
                     // Show all parameters registered
-                    ImGui::EndMenuBar();
+                    ImGui::EndMenu();
                 }
 
                 if (ImGui::BeginMenu("Help")) {

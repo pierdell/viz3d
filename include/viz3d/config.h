@@ -62,7 +62,11 @@ namespace viz3d {
             PrintValue(os) << value << "]";
         }
 
+    protected:
+        inline void DrawHover();
+
     };
+
 
     // A Macro to declare a parameter inside a `ParamGroup`
 #define PARAM_WITH_DEFAULT_VALUE(Type, name, label, description, default_value) \
@@ -92,12 +96,15 @@ namespace viz3d {
 
         ParamGroup(std::string &&group_id, std::string &&_group_name);
 
+        ParamGroup() = default;
     protected:
+        friend class GlobalConfig;
+
         // Registers the parameter to the registry
-        virtual void RegisterParam(Param *param);;
+        virtual void RegisterParam(Param *param);
 
         // Removes the parameter from the registry
-        virtual void RemoveParam(Param *param);;
+        virtual void RemoveParam(Param *param);
 
         std::map<std::string, struct Param *> param_registry;
 
@@ -210,7 +217,7 @@ namespace viz3d {
 
         struct ConfigForm : ParamGroup {
 
-            ConfigForm() : ParamGroup("global_config", "Global Config") {};
+            ConfigForm();
 
             PARAM_WITH_DEFAULT_VALUE(TextParam, config_file_path, "Config File Path",
                                      "Path to the config for save/load operations",
@@ -222,6 +229,22 @@ namespace viz3d {
 
         YAML::Node cached_node; //< A Cache for persisting operations before saving to disk
     };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// IMPLEMENTATIONS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    template<typename ValT>
+    void ValueParam<ValT>::DrawHover() {
+        if (ImGui::IsItemHovered()) {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted(description.c_str());
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+    }
+
 
 }
 

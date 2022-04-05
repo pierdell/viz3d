@@ -12,7 +12,6 @@ namespace fs = std::filesystem;
 
 namespace viz3d {
 
-
     /* -------------------------------------------------------------------------------------------------------------- */
     std::ostream &operator<<(std::ostream &os, const Param &param) {
         param.PrintSelf(os);
@@ -22,7 +21,7 @@ namespace viz3d {
     /* -------------------------------------------------------------------------------------------------------------- */
     void ParamGroup::Draw() {
         ImGui::Separator();
-        ImGui::Text("%s", group_name.c_str());
+        ImGui::Text("Param Group: %s", group_name.c_str());
         for (auto &param_pair: param_registry)
             param_pair.second->Draw();
         ImGui::Separator();
@@ -69,7 +68,8 @@ namespace viz3d {
     /* -------------------------------------------------------------------------------------------------------------- */
     ParamGroup::ParamGroup(std::string &&group_id, std::string &&_group_name)
             : param_group_id(std::move(group_id)), group_name(std::move(_group_name)) {
-        GlobalConfig::Instance().RegisterParamGroup(*this);
+        auto &instance = GlobalConfig::Instance();
+        instance.RegisterParamGroup(*this);
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -80,6 +80,12 @@ namespace viz3d {
     /* -------------------------------------------------------------------------------------------------------------- */
     GlobalConfig &GlobalConfig::Instance() {
         static GlobalConfig config;
+        static std::atomic<bool> is_initialized = false;
+        if (!is_initialized) {
+            is_initialized = true;
+            // Initialize the config
+            config.RegisterParamGroup(config.config_form);
+        }
         return config;
     }
 
@@ -143,7 +149,7 @@ namespace viz3d {
     /* -------------------------------------------------------------------------------------------------------------- */
     void GlobalConfig::UnregisterGroup(ParamGroup &group) {
         std::lock_guard<std::mutex> lock{mutex};
-        if (group_param_registry.find(group.param_group_id) == group_param_registry.end())
+        if (group_param_registry.find(group.param_group_id) != group_param_registry.end())
             group_param_registry.erase(group.param_group_id);
     }
 
@@ -153,16 +159,18 @@ namespace viz3d {
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
-    GlobalConfig::~GlobalConfig() {
-        if (config_form.save_on_exit.value && !config_form.config_file_path.value.empty()) {
-            SaveToDisk(config_form.config_file_path.value);
-        }
-    }
+    GlobalConfig::~GlobalConfig() {}
 
     /* -------------------------------------------------------------------------------------------------------------- */
     void GlobalConfig::Persist() {
         if (!config_form.config_file_path.value.empty())
             SaveToDisk(config_form.config_file_path.value);
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    GlobalConfig::ConfigForm::ConfigForm() {
+        param_group_id = "global_config";
+        group_name = "Global Config";
     }
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -185,6 +193,7 @@ namespace viz3d {
 
     void TextParam::Draw() {
         ImGui::InputText(label.c_str(), &value);
+        DrawHover();
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -193,6 +202,7 @@ namespace viz3d {
 
     void IntParam::Draw() {
         ImGui::InputInt(label.c_str(), &value);
+        DrawHover();
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -201,6 +211,7 @@ namespace viz3d {
 
     void FloatParam::Draw() {
         ImGui::InputFloat(label.c_str(), &value);
+        DrawHover();
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
@@ -209,6 +220,7 @@ namespace viz3d {
 
     void BoolParam::Draw() {
         ImGui::Checkbox(label.c_str(), &value);
+        DrawHover();
     }
 
 

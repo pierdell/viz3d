@@ -4,6 +4,7 @@
 
 #include <viz3d/ui.h>
 #include <viz3d/vtk_window.h>
+#include <viz3d/config.h>
 #include <misc/cpp/imgui_stdlib.h>
 
 #include <vtkConeSource.h>
@@ -22,13 +23,22 @@
 // Define a Custom viz3d::ImGuiWindow to add custom ImGUI Components
 struct TestWindow : viz3d::ImGuiWindow {
 
-    TestWindow(std::string &&winname) : viz3d::ImGuiWindow(std::move(winname)) {}
+    TestWindow(std::string &&winname) : viz3d::ImGuiWindow(std::move(winname)), form_group(*this) {}
 
     void DrawImGUIContent() override {
         ImGui::Text("This is a Custom Defined ImGui Window !");
-        ImGui::InputText("Write a string", &test_string);
-        ImGui::Text(test_string.c_str());
+        form_group.Draw();
+        ImGui::Text("%s", form_group.test_string.value.c_str());
     }
+
+    struct FormData : viz3d::ParamGroup {
+        // Specify an Id unique for the form in the constructor (Important as this will register the form against the global config)
+        explicit FormData(TestWindow &window) : viz3d::ParamGroup(window.window_name_ + "_form", "Form") {};
+        PARAM_WITH_DEFAULT_VALUE(TextParam, test_string, "Write A String", "A Description", "Hello World!")
+        PARAM_WITH_DEFAULT_VALUE(IntParam, test_int, "Select an Integer", "A Description for the selection", 42)
+    } form_group;
+
+    viz3d::ParamGroup group;
 
     std::string test_string;
 };
