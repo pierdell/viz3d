@@ -12,6 +12,8 @@
 #include <implot.h>
 #include <imgui_impl_glfw.h>
 #include <imgui_impl_opengl3.h>
+#include <filesystem>
+#include "viz3d/config.h"
 
 namespace viz3d {
 
@@ -92,6 +94,14 @@ namespace viz3d {
 
     /* -------------------------------------------------------------------------------------------------------------- */
     void GUI::MainLoop() {
+
+        // Initialize the config (look for the default config)
+        auto default_conf_filepath = glfwContext.window_name + ".conf";
+        if (std::filesystem::exists(default_conf_filepath)) {
+            auto &instance = GlobalConfig::Instance();
+            instance.LoadFromDisk(default_conf_filepath);
+        }
+
         // Initialize the GLFW Window and OpenGL context
         CHECK(InitializeGUI()) << "Could not initialize OpenGL Window Context.";
 
@@ -217,7 +227,6 @@ namespace viz3d {
     /* -------------------------------------------------------------------------------------------------------------- */
     size_t GUI::window_id_ = 0;
 
-
     /* -------------------------------------------------------------------------------------------------------------- */
     bool GUI::RenderImGUIFrame(ImGuiIO &io) {
         ImGui_ImplOpenGL3_NewFrame();
@@ -229,6 +238,7 @@ namespace viz3d {
         static bool open_root_dockspace = true;
         static bool show_imgui_demo_window = false;
         static bool show_implot_demo_window = false;
+        static bool show_config_window = false;
         static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
         ImGuiStyle &style = ImGui::GetStyle();
@@ -254,6 +264,12 @@ namespace viz3d {
             ImGui::PopStyleVar(2);
 
             if (ImGui::BeginMenuBar()) {
+                if (ImGui::BeginMenu("Config")) {
+                    ImGui::MenuItem("Show Config Parameters", NULL, &show_config_window);
+                    // Show all parameters registered
+                    ImGui::EndMenuBar();
+                }
+
                 if (ImGui::BeginMenu("Help")) {
                     ImGui::MenuItem("Show ImGui Demo Window", NULL, &show_imgui_demo_window);
                     ImGui::MenuItem("Show Implot Demo Window", NULL, &show_implot_demo_window);
@@ -261,6 +277,12 @@ namespace viz3d {
                 }
                 ImGui::EndMenuBar();
             }
+            ImGui::End();
+        }
+
+        if (show_config_window) {
+            ImGui::Begin("Global Config Window");
+            GlobalConfig::Instance().DrawConfig();
             ImGui::End();
         }
 
