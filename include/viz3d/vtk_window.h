@@ -8,6 +8,7 @@
 
 #include <viz3d/ui.h>
 #include "viz3d/imgui_utils.h"
+#include "config.h"
 
 #include <imgui_internal.h>
 
@@ -65,11 +66,29 @@ namespace viz3d {
         // Draws the elements of the subordinated window
         virtual void DrawSubordinatedImGuiContent();
 
-        struct ImGuiVars_ {
-            float point_size = 2.;
-            float line_width = 2.;
-            bool with_edl_shader = false;
-            bool open_window_options = false;
+        struct ImGuiVars_ : ParamGroup {
+
+            explicit ImGuiVars_(VTKWindow &window) : viz3d::ParamGroup(window.window_name_ + "_VTK_Window_Vars",
+                                                                       "Default Window Form"),
+                                                     color_combo(std::string(window.window_name_)) {
+                color_scale_range.value[0] = 0.;
+                color_scale_range.value[1] = 1.;
+            };
+
+            VIZ3D_PARAM_WITH_DEFAULT_VALUE(FloatParam, point_size, "Point Size", "The OpenGL point size", 2.f)
+            VIZ3D_PARAM_WITH_DEFAULT_VALUE(FloatParam, line_size, "Line Size", "The OpenGL line size", 2.f)
+            VIZ3D_PARAM_WITH_DEFAULT_VALUE(BoolParam, with_edl_shader, "With EDL Shader",
+                                           "Whether to activate the EDL Shader", 2.f)
+            VIZ3D_PARAM_WITH_DEFAULT_VALUE(BoolParam, open_window_options, "Open Window options",
+                                           "Whether to open the Window Options window", 2.f)
+            VIZ3D_PARAM_WITH_DEFAULT_VALUE(FloatArray3, background_color,
+                                           "Background Color", "The Background Color for VTK's viewport", 0.f)
+
+            VIZ3D_PARAM_WITH_DEFAULT_VALUE(FloatArray2, color_scale_range,
+                                           "Color Scale Range", "The range of the color scale for the actors", 0.f)
+            ImGui_ColorMapCombo color_combo;
+        VIZ3D_REGISTER_PARAM(color_combo)
+
         } imgui_vars_;
         const std::string options_winname_;
 
@@ -94,8 +113,6 @@ namespace viz3d {
             GLuint textureId = 0; //< Texture Id
 
         } _vtk_context;
-
-        ImGui_ColorMapCombo color_combo;
 
         std::set<vtkSmartPointer<vtkActor>> actors_, actors_to_remove_, actors_to_add_;
         std::mutex actors_management_mutex_;

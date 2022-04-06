@@ -7,6 +7,7 @@
 #include <vtkLookupTable.h>
 
 #include <imgui.h>
+#include "config.h"
 
 namespace viz3d {
 
@@ -16,7 +17,7 @@ namespace viz3d {
         auto size = ImGui::CalcTextSize(text).x;
         auto width = ImGui::GetWindowSize().x;
         ImGui::SetCursorPosX((width - size) * 0.5f);
-        ImGui::Text(text);
+        ImGui::Text("%s", text);
     }
 
     // A Button of width equal to the whole available width
@@ -46,20 +47,23 @@ namespace viz3d {
     const std::vector<std::pair<std::string, VTKColorMapType>> &ColorMapPairs();
 
     /*!
+     * @brief   Returns a vector to the ColorMap Labels
+     */
+    std::vector<std::string> ColorMapLabels();
+
+    /*!
      * @brief   Returns a vtkLookupTable defining the specified colormap
      */
     vtkSmartPointer<vtkLookupTable> ColorMap(VTKColorMapType type = VIRIDIS);
 
     // A Simple utility function to select a vtk color map via an ImGui Combo
-    struct ImGui_ColorMapCombo {
-
-        void DrawCombo();
+    struct ImGui_ColorMapCombo : ComboParam {
 
         inline VTKColorMapType GetSelectedColorMapType() const;
 
         inline vtkSmartPointer<vtkLookupTable> GetSelectedColorMap() const;
 
-        int selected_idx = 0;
+        explicit ImGui_ColorMapCombo(std::string &&window_id);
     };
 
 

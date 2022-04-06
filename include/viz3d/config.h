@@ -1,8 +1,10 @@
 #ifndef VIZ3D_CONFIG_H
 #define VIZ3D_CONFIG_H
 
-#include <yaml-cpp/yaml.h>
 #include <mutex>
+
+#include <yaml-cpp/yaml.h>
+#include <misc/cpp/imgui_stdlib.h>
 
 namespace viz3d {
 
@@ -31,7 +33,94 @@ namespace viz3d {
 
         Param(std::string &&_key, std::string &&label, std::string &&_description) :
                 key(std::move(_key)), label(std::move(label)), description(std::move(_description)) {}
+
+    protected:
+
+        void DrawHover() const;
     };
+
+#define VIZ3D_REGISTER_PARAM(param_name) \
+    private:                                                             \
+        viz3d::ParamGroup::ParamHelper helper_ ## param_name ## _  = ParamGroup::ParamHelper(*this, param_name); \
+    public:
+
+    // A Macro to declare a parameter inside a `ParamGroup`
+#define VIZ3D_PARAM_WITH_DEFAULT_VALUE(Type, name, label, description, default_value) \
+    viz3d::Type name  = viz3d::Type (std::string(#name), label, std::string(description), std::move(default_value)); \
+    VIZ3D_REGISTER_PARAM(name)
+
+
+    /*!
+     * @brief   A ParamGroup manages parameters as a group, drawing, saving and loading them together
+     */
+    struct ParamGroup {
+        std::string param_group_id;
+        std::string group_name;
+
+        // Draws the Parameter Group
+        virtual void Draw();
+
+        // Saves the group to a YAML Node
+        void Save(YAML::Node &node);
+
+        // Loads the group from a YAML Node
+        void Load(YAML::Node &node);
+
+        ~ParamGroup();
+
+        ParamGroup(std::string &&group_id, std::string &&_group_name);
+
+        ParamGroup() = default;
+
+    protected:
+        friend class GlobalConfig;
+
+        // Registers the parameter to the registry
+        virtual void RegisterParam(Param *param);
+
+        // Removes the parameter from the registry
+        virtual void RemoveParam(Param *param);
+
+        std::map<std::string, struct Param *> param_registry;
+
+        // Helper which registers a param to the ParamGroup at construction
+        struct ParamHelper {
+            ParamHelper(ParamGroup &group, Param &param);
+        };
+    };
+
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+    /// PARAMETERS DEFINITIONS
+    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+    /*!
+     * @brief   A ComboParam which is a utility to define a multiple choice selection param
+     */
+    struct ComboParam : Param {
+
+        explicit ComboParam(std::string &&key, std::string &&label,
+                            std::string &&description, std::vector<std::string> &&labels);
+
+        explicit ComboParam(std::string &&key, std::string &&label,
+                            std::string &&description, std::initializer_list<std::string> &&labels);
+
+        // Draws the editable parameter with ImGui
+        void Draw() override;;
+
+        // Loads the parameter value from the YAML Node
+        void Load(YAML::Node &node) override;
+
+        // Saves the parameter key-value in the YAML Node
+        void Save(YAML::Node &node) const override;
+
+        // Prints the parameter in a human readable form
+        void PrintSelf(std::ostream &os) const override;
+
+    protected:
+        const std::vector<std::string> labels;
+        int selected_idx = 0;
+    };
+
 
     /*!
      * @brief   A Value parameter, is a simple extension of Param for simple Value types,
@@ -61,81 +150,60 @@ namespace viz3d {
             os << "[" << key << ": ";
             PrintValue(os) << value << "]";
         }
-
-    protected:
-        inline void DrawHover();
-
     };
-
-
-    // A Macro to declare a parameter inside a `ParamGroup`
-#define PARAM_WITH_DEFAULT_VALUE(Type, name, label, description, default_value) \
-    viz3d::Type name  = viz3d::Type (std::string(#name), label, std::string(description), std::move(default_value)); \
-    private:                                                             \
-    viz3d::ParamGroup::ParamHelper helper_ ## name ## _  = ParamGroup::ParamHelper(*this, name); \
-    public:
-
 
     /*!
-     * @brief   A ParamGroup manages parameters as a group, drawing, saving and loading them together
+     * @brief   An array parameter handling multiple inputs simultaneously for some specific numeric types
+     *          (see ImGui::InputFloat2 for e.g.)
      */
-    struct ParamGroup {
-        std::string param_group_id;
-        std::string group_name;
+    template<typename ScalarT, int N>
+    struct ArrayParam : Param {
+        typedef std::array<ScalarT, N> value_t;
+        typedef ScalarT scalar_t;
+        static constexpr int dimension = N;
+        value_t value;
 
-        // Draws the Parameter Group
-        virtual void Draw();
+        ArrayParam(std::string &&name, std::string &&label, std::string &&description, scalar_t _value)
+                : Param(std::move(name), std::move(label), std::move(description)) {
+            value.fill(_value);
+            static_assert(std::is_arithmetic_v<ScalarT>,
+                          "The type parameter is not compatible with ArrayParam (not supported by ImGui)");
+        }
 
-        // Saves the group to a YAML Node
-        void Save(YAML::Node &node);
+        inline void PrintSelf(std::ostream &os) const override {
+            os << "[" << key << ": ";
+            for (int i(0); i < N; ++i)
+                os << value[i] << (i == N - 1 ? "" : ",");
+            os << "]";
+        }
 
-        // Loads the group from a YAML Node
-        void Load(YAML::Node &node);
-
-        ~ParamGroup();
-
-        ParamGroup(std::string &&group_id, std::string &&_group_name);
-
-        ParamGroup() = default;
-    protected:
-        friend class GlobalConfig;
-
-        // Registers the parameter to the registry
-        virtual void RegisterParam(Param *param);
-
-        // Removes the parameter from the registry
-        virtual void RemoveParam(Param *param);
-
-        std::map<std::string, struct Param *> param_registry;
-
-        // Helper which registers a param to the ParamGroup at construction
-        struct ParamHelper {
-            ParamHelper(ParamGroup &group, Param &param);
-        };
     };
 
 
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// PARAMETERS DECLARATIONS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-#define VIZ3D_DECLARE_SIMPLE_PARAM(TypeName, value_type) \
-    struct TypeName : ValueParam< value_type > {         \
-        using ValueParam< value_type >::ValueParam;      \
-        using ValueParam<value_type>::operator=;         \
-        using ValueParam::value_t;                       \
-        void Draw() override;                            \
-        void Save(YAML::Node &) const override;          \
-        void Load(YAML::Node &) override;                \
+    /* -------------------------------------------------------------------------------------------------------------- */
+    // MACRO TO DEFINE SIMPLE CLASSICAL INPUT VALUE PARAM
+#define VIZ3D_DEFINE_VALUE_PARAM(TypeName, value_type, imgui_fun) \
+    struct TypeName : ValueParam< value_type > {            \
+        using ValueParam< value_type >::ValueParam;         \
+        using ValueParam<value_type>::operator=;            \
+        using ValueParam::value_t;                          \
+        void Draw() override {                              \
+            DrawHover(); ImGui::SameLine();                 \
+            imgui_fun(label.c_str(), &value);               \
+        };                                                  \
+        void Save(YAML::Node &node) const override {node[key] = value;};    \
+        void Load(YAML::Node &node) override{               \
+             if (node.IsMap() && node[key]) {               \
+                value = node[key].as<value_t>();            \
+            }                                               \
+        };                                                  \
     };
 
-    VIZ3D_DECLARE_SIMPLE_PARAM(TextParam, std::string)
+    VIZ3D_DEFINE_VALUE_PARAM(TextParam, std::string, ImGui::InputText)
 
     /* -------------------------------------------------------------------------------------------------------------- */
     // Boolean Param
-    VIZ3D_DECLARE_SIMPLE_PARAM(BoolParam, bool)
-
+    VIZ3D_DEFINE_VALUE_PARAM(BoolParam, bool, ImGui::Checkbox)
 
     template<>
     inline std::ostream &ValueParam<bool>::PrintValue(std::ostream &os) const {
@@ -145,23 +213,100 @@ namespace viz3d {
 
     /* -------------------------------------------------------------------------------------------------------------- */
     // Numeric Parameter
-    VIZ3D_DECLARE_SIMPLE_PARAM(FloatParam, float)
-    VIZ3D_DECLARE_SIMPLE_PARAM(IntParam, int)
+    VIZ3D_DEFINE_VALUE_PARAM(FloatParam, float, ImGui::InputFloat)
+    VIZ3D_DEFINE_VALUE_PARAM(IntParam, int, ImGui::InputInt)
 
-#define SPECIALIZATION_PRINT_NUMERIC_VALUE(numeric_type)                                \
-    template<>                                                                          \
-    inline std::ostream &ValueParam<numeric_type>::PrintValue(std::ostream &os) const { \
-        static_assert(std::is_arithmetic_v<numeric_type>, "Not an arithmetic type");    \
-        os << std::to_string(value);                                                    \
-        return os;                                                                      \
+    /* -------------------------------------------------------------------------------------------------------------- */
+    // MACRO TO DEFINE SCALAR ARRAY PARAMS
+#define VIZ3D_DECLARE_ARRAY_PARAM(TypeName, scalar_type, dim, imgui_function) \
+    struct TypeName : ArrayParam< scalar_type, dim > {              \
+        using ArrayParam< scalar_type, dim >::ArrayParam;           \
+        using ArrayParam< scalar_type, dim >::value_t;              \
+        inline void Draw() override {                               \
+            DrawHover(); ImGui::SameLine();                         \
+            imgui_function(label.c_str(), value.data());            \
+        };                                                          \
+        inline void Save(YAML::Node & node) const override {        \
+            YAML::Node array_node;                                  \
+            for(int i(0);i<TypeName::dimension;++i)                 \
+                array_node[i] = value[i];                           \
+            node[key] = array_node;                                 \
+        };                                                          \
+        inline void Load(YAML::Node &node) override {               \
+             if (node.IsMap() && node[key] &&                                       \
+                 node[key].size() == dimension &&                   \
+                 node[key].IsSequence()) {                          \
+                auto array_node = node[key];                        \
+                for(int i(0);i<TypeName::dimension;++i)                 \
+                    value[i] = array_node[i].as<TypeName::scalar_t>();  \
+            }                                                       \
+        };                                                          \
     };
 
 
-    SPECIALIZATION_PRINT_NUMERIC_VALUE(int)
+    VIZ3D_DECLARE_ARRAY_PARAM(IntArray2, int, 2, ImGui::InputInt2)
+    VIZ3D_DECLARE_ARRAY_PARAM(IntArray3, int, 3, ImGui::InputInt3)
+    VIZ3D_DECLARE_ARRAY_PARAM(IntArray4, int, 4, ImGui::InputInt4)
 
-    SPECIALIZATION_PRINT_NUMERIC_VALUE(double)
+    VIZ3D_DECLARE_ARRAY_PARAM(FloatArray2, float, 2, ImGui::InputFloat2)
+    VIZ3D_DECLARE_ARRAY_PARAM(FloatArray3, float, 3, ImGui::InputFloat3)
+    VIZ3D_DECLARE_ARRAY_PARAM(FloatArray4, float, 4, ImGui::InputFloat4)
 
-    SPECIALIZATION_PRINT_NUMERIC_VALUE(float)
+
+    /* -------------------------------------------------------------------------------------------------------------- */
+    // MACRO TO DEFINE SLIDER SCALAR PARAMS
+
+#define VIZ3D_DECLARE_VALUE_SLIDER_PARAM(Type, value_type, min_val, max_val, slider_type) \
+    struct Type : ValueParam<value_type> {                                                          \
+        using ValueParam<value_type>::ValueParam;                                                  \
+        typedef value_type scalar_t;                                \
+        static constexpr scalar_t min = min_val, max = max_val;     \
+        inline void Draw() override {                               \
+               DrawHover(); ImGui::SameLine();                      \
+               slider_type(label.c_str(), &value, min, max);        \
+        };                                                          \
+        inline void Save(YAML::Node& node) const override{          \
+            node[key] = value;                                      \
+        }                                                           \
+        inline void Load(YAML::Node& node) override {               \
+             if (node.IsMap() && node[key] && node[key].IsScalar()) {   \
+                    value = node[key].as<Type::scalar_t>();             \
+            }                                                           \
+        }                                                               \
+    };
+
+    VIZ3D_DECLARE_VALUE_SLIDER_PARAM(UnitIntSliderParam, int, 0, 1, ImGui::SliderInt);
+
+    // MACRO TO DEFINE SLIDER SCALAR ARRAY PARAMS
+#define VIZ3D_DEFINE_ARRAY_SLIDER_PARAM(Type, value_type, dim, min_val, max_val, slider_type) \
+    struct Type : ArrayParam<value_type, dim> {                                                          \
+        using  ArrayParam<value_type, dim>::ArrayParam;                                                  \
+        typedef value_type scalar_t;                                \
+        static constexpr scalar_t min = min_val, max = max_val;     \
+        inline void Draw() override {                               \
+               DrawHover(); ImGui::SameLine();                      \
+               slider_type(label.c_str(), value.data(), min, max);        \
+        };                                                                                               \
+        inline void Save(YAML::Node& node) const override{     \
+            YAML::Node array_node;                    \
+            for(int i(0);i<Type::dimension;++i)       \
+                array_node[i] = value[i];             \
+            node[key] = array_node;                   \
+        }                                             \
+        inline void Load(YAML::Node& node) override { \
+             if (node.IsMap() && node[key] &&         \
+                 node[key].size() == dimension &&     \
+                 node[key].IsSequence()) {            \
+                auto array_node = node[key];          \
+                for(int i(0);i<Type::dimension;++i)   \
+                    value[i] = array_node[i].as<Type::scalar_t>(); \
+            }                                         \
+        }                                             \
+    };
+
+
+    VIZ3D_DEFINE_ARRAY_SLIDER_PARAM(UnitFloatConstrained3, float, 3, 0.f, 1.f, ImGui::SliderFloat3)
+
 
     ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
     /// GLOBAL CONFIG
@@ -219,33 +364,16 @@ namespace viz3d {
 
             ConfigForm();
 
-            PARAM_WITH_DEFAULT_VALUE(TextParam, config_file_path, "Config File Path",
-                                     "Path to the config for save/load operations",
-                                     "viz3d.conf");
-            PARAM_WITH_DEFAULT_VALUE(BoolParam, save_on_exit, "Save On Exit",
-                                     "Whether to save the Config to disk on exit", true);
+            VIZ3D_PARAM_WITH_DEFAULT_VALUE(TextParam, config_file_path, "Config File Path",
+                                           "Path to the config for save/load operations",
+                                           "viz3d.conf");
+            VIZ3D_PARAM_WITH_DEFAULT_VALUE(BoolParam, save_on_exit, "Save On Exit",
+                                           "Whether to save the Config to disk on exit", true);
 
         } config_form;
 
         YAML::Node cached_node; //< A Cache for persisting operations before saving to disk
     };
-
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// IMPLEMENTATIONS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-    template<typename ValT>
-    void ValueParam<ValT>::DrawHover() {
-        ImGui::TextDisabled("(?)");
-        if (ImGui::IsItemHovered()) {
-            ImGui::BeginTooltip();
-            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
-            ImGui::TextUnformatted(description.c_str());
-            ImGui::PopTextWrapPos();
-            ImGui::EndTooltip();
-        }
-    }
-
 
 }
 

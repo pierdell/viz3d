@@ -9,7 +9,7 @@
 
 struct Form : viz3d::ParamGroup {
     using viz3d::ParamGroup::ParamGroup;
-    PARAM_WITH_DEFAULT_VALUE(IntParam, x, "x", "The value x", 1)
+    VIZ3D_PARAM_WITH_DEFAULT_VALUE(IntParam, x, "x", "The value x", 1)
 };
 
 // Config

@@ -19,6 +19,18 @@ namespace viz3d {
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
+    void Param::DrawHover() const {
+        ImGui::TextDisabled("(?)");
+        if (ImGui::IsItemHovered()) {
+            ImGui::BeginTooltip();
+            ImGui::PushTextWrapPos(ImGui::GetFontSize() * 35.0f);
+            ImGui::TextUnformatted(description.c_str());
+            ImGui::PopTextWrapPos();
+            ImGui::EndTooltip();
+        }
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
     void ParamGroup::Draw() {
         ImGui::Separator();
         ImGui::Text("Param Group: %s", group_name.c_str());
@@ -173,59 +185,60 @@ namespace viz3d {
         group_name = "Global Config";
     }
 
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-    /// PARAMETERS IMPLEMENTATIONS
-    ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-
-#define VIZ3D_VALUE_PARAM_SAVE_AND_LOAD(Type)         \
-    void Type::Save(YAML::Node& node) const {   \
-        node[key] = value;                      \
-    }                                           \
-    void Type::Load(YAML::Node& node) {         \
-         if (node[key]) {                       \
-            value = node[key].as<value_t>();    \
-        }                                       \
-    }
-
-#define DRAW_HOVER \
-    ImGui::SameLine(); \
-    DrawHover();
+    /* -------------------------------------------------------------------------------------------------------------- */
+    ComboParam::ComboParam(std::string &&key, std::string &&label, std::string &&description,
+                           std::vector<std::string> &&labels)
+            : Param(std::move(key), std::move(label), std::move(description)),
+              labels(std::move(labels)) {}
 
     /* -------------------------------------------------------------------------------------------------------------- */
-    // TextParam
-    VIZ3D_VALUE_PARAM_SAVE_AND_LOAD(TextParam)
-
-    void TextParam::Draw() {
-        ImGui::InputText(label.c_str(), &value);
-        DRAW_HOVER
-    }
+    ComboParam::ComboParam(std::string &&key, std::string &&label, std::string &&description,
+                           std::initializer_list<std::string> &&labels)
+            : Param(std::move(key), std::move(label), std::move(description)),
+              labels(labels) {}
 
     /* -------------------------------------------------------------------------------------------------------------- */
-    // IntParam
-    VIZ3D_VALUE_PARAM_SAVE_AND_LOAD(IntParam)
-
-    void IntParam::Draw() {
-        ImGui::InputInt(label.c_str(), &value);
-        DRAW_HOVER
-    }
-
-    /* -------------------------------------------------------------------------------------------------------------- */
-    // FloatParam
-    VIZ3D_VALUE_PARAM_SAVE_AND_LOAD(FloatParam)
-
-    void FloatParam::Draw() {
-        ImGui::InputFloat(label.c_str(), &value);
-        DRAW_HOVER
+    void ComboParam::Draw() {
+        DrawHover();
+        ImGui::SameLine();
+        if (labels.empty()) {
+            ImGui::PushStyleColor(ImGuiCol_Text, ImVec4(0.6, 0., 0., 1.));
+            ImGui::Text("/!\\ Empty Combo !");
+            ImGui::PopStyleColor();
+            return;
+        }
+        if (ImGui::BeginCombo(label.c_str(), labels[selected_idx % int(labels.size())].c_str())) {
+            for (int i(0); i < labels.size(); i++) {
+                const bool is_selected = (selected_idx == i);
+                if (ImGui::Selectable(labels[i].c_str(), is_selected)) {
+                    selected_idx = i;
+                }
+                if (is_selected)
+                    ImGui::SetItemDefaultFocus();
+            }
+            ImGui::EndCombo();
+        }
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
-    // Bool Param
-    VIZ3D_VALUE_PARAM_SAVE_AND_LOAD(BoolParam)
-
-    void BoolParam::Draw() {
-        ImGui::Checkbox(label.c_str(), &value);
-        DRAW_HOVER
+    void ComboParam::Load(YAML::Node &node) {
+        if (node.IsMap() && node[key] && node[key].IsScalar()) {
+            auto value = node[key].as<std::string>();
+            auto it = std::find(labels.begin(), labels.end(), value);
+            if (it != labels.end())
+                selected_idx = int(std::distance(labels.begin(), it));
+        }
     }
 
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void ComboParam::Save(YAML::Node &node) const {
+        if (selected_idx >= 0 && selected_idx < labels.size())
+            node[key] = labels[selected_idx];
+    }
 
+    /* -------------------------------------------------------------------------------------------------------------- */
+    void ComboParam::PrintSelf(std::ostream &os) const {
+        if (selected_idx >= 0 && selected_idx < labels.size())
+            os << "[key: " << key << ", label: " << labels[selected_idx] << "]";
+    }
 } // namespace viz3d

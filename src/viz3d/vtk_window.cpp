@@ -59,8 +59,8 @@ namespace viz3d {
         render_window->SetInteractor(interactor);
 
         for (auto &actor: actors_) {
-            actor->GetProperty()->SetPointSize(imgui_vars_.point_size);
-            actor->GetProperty()->SetLineWidth(imgui_vars_.line_width);
+            actor->GetProperty()->SetPointSize(imgui_vars_.point_size.value);
+            actor->GetProperty()->SetLineWidth(imgui_vars_.line_size.value);
             renderer->AddActor(actor);
         }
 
@@ -197,7 +197,7 @@ namespace viz3d {
         DrawVTKWindow();
 
         ProcessEvents();
-        ImGui::Image((void *) _vtk_context.textureId,
+        ImGui::Image((ImTextureID) _vtk_context.textureId,
                      ImGui::GetContentRegionAvail(),
                      ImVec2(0, 1), ImVec2(1, 0));
         ImGui::EndChild();
@@ -207,8 +207,8 @@ namespace viz3d {
     /* -------------------------------------------------------------------------------------------------------------- */
     void VTKWindow::AddActor(vtkSmartPointer<vtkActor> actor) {
         std::lock_guard<std::mutex> lock(actors_management_mutex_);
-        actor->GetProperty()->SetPointSize(imgui_vars_.point_size);
-        actor->GetProperty()->SetLineWidth(imgui_vars_.line_width);
+        actor->GetProperty()->SetPointSize(imgui_vars_.point_size.value);
+        actor->GetProperty()->SetLineWidth(imgui_vars_.line_size.value);
         actors_to_add_.insert(actor);
     }
 
@@ -238,7 +238,7 @@ namespace viz3d {
                     (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().FramePadding.x) * 0.5f,
                     2 * ImGui::GetFontSize());
 
-            static float color[3] = {0.f, 0.f, 0.f};
+            float *color = imgui_vars_.background_color.value.data();
             ImGui::ColorPicker3("Background Color", color);
             ImGui::Separator();
             if (ImGui::Button("Apply", button_size)) {
@@ -258,8 +258,7 @@ namespace viz3d {
 
         if (ImGui::BeginPopup("color_options")) {
             ImGui_CenteredText("Model Color Range");
-            static float scalar_range[2] = {0.f, 1.f};
-            ImGui::InputFloat2("Scalar Range", scalar_range);
+            ImGui::InputFloat2("Scalar Range", (imgui_vars_.color_scale_range.value.data()));
             auto collection = _vtk_context.renderer->GetActors();
 
             if (ImGui_HorizontalButton("Set to Min-Max")) {
@@ -280,6 +279,9 @@ namespace viz3d {
                 }
                 if (min_max[0] != std::numeric_limits<float>::max() &&
                     min_max[1] != std::numeric_limits<float>::min()) {
+                    imgui_vars_.color_scale_range.value[0] = float(min_max[0]);
+                    imgui_vars_.color_scale_range.value[1] = float(min_max[1]);
+
                     collection->InitTraversal();
                     actor = collection->GetNextActor();
                     while (actor) {
@@ -289,18 +291,19 @@ namespace viz3d {
                 }
             }
 
-            color_combo.DrawCombo();
+            imgui_vars_.color_combo.Draw();
 
             ImGui::Separator();
             auto button_size = ImGui_HorizontalButtonSize(0.5f);
             if (ImGui::Button("Apply", button_size)) {
                 collection->InitTraversal();
                 auto actor = collection->GetNextActor();
-                auto cmap = ColorMap(color_combo.GetSelectedColorMapType());
+                auto cmap = ColorMap(imgui_vars_.color_combo.GetSelectedColorMapType());
                 while (actor) {
                     auto *mapper = actor->GetMapper();
                     if (mapper) {
-                        mapper->SetScalarRange(scalar_range[0], scalar_range[1]);
+                        mapper->SetScalarRange(imgui_vars_.color_scale_range.value[0],
+                                               imgui_vars_.color_scale_range.value[1]);
                         mapper->SetLookupTable(cmap);
                     }
                     actor = collection->GetNextActor();
@@ -324,19 +327,18 @@ namespace viz3d {
             ImGui_CenteredText("Rendering Options");
             ImGui::Separator();
 
-            ImGui::Checkbox("With EDL Shader", &imgui_vars_.with_edl_shader);
-            ImGui::DragFloat("Point Size", &imgui_vars_.point_size, 0.2f, 1.0f, 20.0f);
-            ImGui::DragFloat("Line Width", &imgui_vars_.line_width, 0.2f, 1.0f, 20.0f);
+            ImGui::Checkbox("With EDL Shader", &imgui_vars_.with_edl_shader.value);
+            ImGui::DragFloat("Point Size", &imgui_vars_.point_size.value, 0.2f, 1.0f, 20.0f);
+            ImGui::DragFloat("Line Width", &imgui_vars_.line_size.value, 0.2f, 1.0f, 20.0f);
 
             ImVec2 button_size = ImVec2(
                     (ImGui::GetContentRegionAvail().x - ImGui::GetStyle().FramePadding.x) * 0.5f,
                     2 * ImGui::GetFontSize());
             if (ImGui::Button("Apply", button_size)) {
-
                 _vtk_context.renderer->ReleaseGraphicsResources(_vtk_context.render_window);
                 _vtk_context.renderer->SetRenderWindow(nullptr);
 
-                if (imgui_vars_.with_edl_shader) {
+                if (imgui_vars_.with_edl_shader.value) {
                     auto basicPasses = vtkSmartPointer<vtkRenderStepsPass>::New();
                     auto edl = vtkSmartPointer<vtkEDLShading>::New();
                     edl->SetDelegatePass(basicPasses);
@@ -350,8 +352,8 @@ namespace viz3d {
                 collection->InitTraversal();
                 auto actor = collection->GetNextActor();
                 while (actor) {
-                    actor->GetProperty()->SetPointSize(imgui_vars_.point_size);
-                    actor->GetProperty()->SetLineWidth(imgui_vars_.line_width);
+                    actor->GetProperty()->SetPointSize(imgui_vars_.point_size.value);
+                    actor->GetProperty()->SetLineWidth(imgui_vars_.line_size.value);
                     actor = collection->GetNextActor();
                 }
                 _vtk_context.renderer->SetRenderWindow(_vtk_context.render_window);
@@ -368,7 +370,7 @@ namespace viz3d {
     void VTKWindow::DrawImGuiWindowConfigurations() {
 
         ImGui::PushID("context_menu");
-        ImGui::MenuItem("Window Options", NULL, &imgui_vars_.open_window_options);
+        ImGui::MenuItem("Window Options", NULL, &imgui_vars_.open_window_options.value);
         ImGui::PopID();
 
         ImGui::PushStyleVar(ImGuiStyleVar_WindowPadding, ImVec2(4.0, 4.0));
@@ -378,7 +380,7 @@ namespace viz3d {
         ImGuiWindowClass window_class;
         window_class.DockNodeFlagsOverrideSet = ImGuiDockNodeFlags_NoDockingOverMe;
         ImGui::SetNextWindowClass(&window_class);
-        if (imgui_vars_.open_window_options &&
+        if (imgui_vars_.open_window_options.value &&
             ImGui::Begin(options_winname_.c_str())) {
             DrawSubordinatedImGuiContent();
             ImGui::End();
@@ -422,6 +424,7 @@ namespace viz3d {
     /* -------------------------------------------------------------------------------------------------------------- */
     VTKWindow::VTKWindow(std::string &&winname) :
             ImGuiWindow(std::move(winname)),
+            imgui_vars_(*this),
             options_winname_(window_name_ + " Options") {}
 
     /* -------------------------------------------------------------------------------------------------------------- */
