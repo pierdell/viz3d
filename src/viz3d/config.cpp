@@ -1,5 +1,6 @@
 #include <filesystem>
 #include <fstream>
+#include <atomic>
 
 #include <glog/logging.h>
 

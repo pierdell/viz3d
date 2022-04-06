@@ -2,6 +2,7 @@
 #define VIZ3D_CONFIG_H
 
 #include <mutex>
+#include <algorithm>
 
 #include <yaml-cpp/yaml.h>
 #include <misc/cpp/imgui_stdlib.h>
