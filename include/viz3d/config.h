@@ -26,6 +26,7 @@ namespace viz3d {
         // Saves the parameter key-value in the YAML Node
         virtual void Save(YAML::Node &node) const = 0;
 
+
         // Prints the parameter in a human readable form
         virtual void PrintSelf(std::ostream &os) const = 0;
 
@@ -118,7 +119,7 @@ namespace viz3d {
         void PrintSelf(std::ostream &os) const override;
 
     protected:
-        const std::vector<std::string> labels;
+        std::vector<std::string> labels;
         int selected_idx = 0;
     };
 
