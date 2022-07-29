@@ -7,4 +7,6 @@ VIZ3D_ADD_SRC(
         ${H_PREFIX}/vtk_window.h
         ${CPP_PREFIX}/vtk_window.cpp
         ${H_PREFIX}/imgui_utils.h
-        ${CPP_PREFIX}/imgui_utils.cpp)
+        ${CPP_PREFIX}/imgui_utils.cpp
+        ${H_PREFIX}/config.h
+        ${CPP_PREFIX}/config.cpp)

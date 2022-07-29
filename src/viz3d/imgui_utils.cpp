@@ -18,6 +18,16 @@ namespace viz3d {
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
+    std::vector<std::string> ColorMapLabels() {
+        auto &pairs = ColorMapPairs();
+        std::vector<std::string> labels;
+        labels.reserve(pairs.size());
+        for (auto &pair: pairs)
+            labels.push_back(pair.first);
+        return labels;
+    }
+
+    /* -------------------------------------------------------------------------------------------------------------- */
     namespace {
 
         vtkSmartPointer<vtkLookupTable> _ColorMap(VTKColorMapType type) {
@@ -1091,24 +1101,9 @@ namespace viz3d {
     }
 
     /* -------------------------------------------------------------------------------------------------------------- */
-    void ImGui_ColorMapCombo::DrawCombo() {
-        auto &colormaps = ColorMapPairs();
-        if (ImGui::BeginCombo("ColorMap",
-                              colormaps[selected_idx % int(colormaps.size())].first.c_str())) {
-            auto it = colormaps.begin();
-            for (int i(0); i < colormaps.size(); i++) {
-                const bool is_selected = (selected_idx == i);
-                if (ImGui::Selectable((*it).first.c_str(), is_selected)) {
-                    selected_idx = i;
-                }
-                if (is_selected)
-                    ImGui::SetItemDefaultFocus();
-                it++;
-            }
-            ImGui::EndCombo();
-        }
-    }
+    ImGui_ColorMapCombo::ImGui_ColorMapCombo(std::string &&window_id) :
+            ComboParam(window_id + "_ColorCombo",
+                       "Color Map", "Selection of a Color Map", ColorMapLabels()) {}
 
-    /* -------------------------------------------------------------------------------------------------------------- */
 
 }

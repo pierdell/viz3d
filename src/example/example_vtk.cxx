@@ -4,6 +4,7 @@
 
 #include <viz3d/ui.h>
 #include <viz3d/vtk_window.h>
+#include <viz3d/config.h>
 #include <misc/cpp/imgui_stdlib.h>
 
 #include <vtkConeSource.h>
@@ -18,17 +19,46 @@
 
 #include <Eigen/Dense>
 
+struct TestCombo : viz3d::ComboParam {
+    TestCombo() : viz3d::ComboParam("test_combo", "Test Combo", "Demonstration for how to use combo",
+                                    {
+                                            "Hello", "World", "!"
+                                    }) {};
+};
 
 // Define a Custom viz3d::ImGuiWindow to add custom ImGUI Components
 struct TestWindow : viz3d::ImGuiWindow {
 
-    TestWindow(std::string &&winname) : viz3d::ImGuiWindow(std::move(winname)) {}
+    TestWindow(std::string &&winname) : viz3d::ImGuiWindow(std::move(winname)), form_group(*this) {}
 
     void DrawImGUIContent() override {
         ImGui::Text("This is a Custom Defined ImGui Window !");
-        ImGui::InputText("Write a string", &test_string);
-        ImGui::Text(test_string.c_str());
+        form_group.Draw();
+        ImGui::Text("%s", form_group.test_string.value.c_str());
     }
+
+    struct FormData : viz3d::ParamGroup {
+        // Specify an Id unique for the form in the constructor (Important as this will register the form against the global config)
+        explicit FormData(TestWindow &window) : viz3d::ParamGroup(window.window_name_ + "_form", "Form") {
+            test_color.value = {1.f, 2.f, 3.f};
+        };
+        VIZ3D_PARAM_WITH_DEFAULT_VALUE(TextParam, test_string, "Write A String", "A Description", "Hello World!")
+        VIZ3D_PARAM_WITH_DEFAULT_VALUE(IntParam, test_int, "Select an Integer", "A Description for the selection", 42)
+        VIZ3D_PARAM_WITH_DEFAULT_VALUE(FloatArray2, test_array, "Select an Array", "A Description for the selection",
+                                       0.f)
+        VIZ3D_PARAM_WITH_DEFAULT_VALUE(FloatArray3, test_color, "Select a color (as a vector of float)",
+                                       "A color selected", 0.f)
+        VIZ3D_PARAM_WITH_DEFAULT_VALUE(UnitFloatConstrained3, test_slider_3,
+                                       "Color Slider", "A Slider for the selection of a color", 0.f);
+        VIZ3D_PARAM_WITH_DEFAULT_VALUE(UnitIntSliderParam, test_int_slider,
+                                       "Int Slider Value", "A Slider for a simple value", 0);
+
+        TestCombo combo; //< By itself the parameter is not registered to the ParamGroup
+    VIZ3D_REGISTER_PARAM(combo); //< The param is registered to the group with this macro
+
+    } form_group;
+
+    viz3d::ParamGroup group;
 
     std::string test_string;
 };

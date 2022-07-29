@@ -4,6 +4,7 @@ project(VIZ3D-EXTERNAL)
 option(BUILD_GLOG "Whether to build GLOG from sources" ON)
 option(BUILD_EIGEN "Whether to download EIGEN sources" ON)
 option(BUILD_VTK "Whether to build VTK from sources" ON)
+option(BUILD_YAML_CPP "Whether to build YAML_CPP from sources" ON)
 
 set(CMAKE_CXX_STANDARD 17)
 set(CMAKE_CXX_STANDARD_REQUIRED ON)
@@ -32,6 +33,35 @@ if (BUILD_GLOG)
 
             STEP_TARGETS glog-build
             BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install)
+endif ()
+
+
+if (BUILD_YAML_CPP)
+
+    message(INFO "${LOG_PREFIX}Generating yaml-cpp dependency")
+    if (NOT YAML_INSTALL_DIR)
+        set(YAML_INSTALL_DIR ${INSTALL_ROOT}/yaml-cpp)
+    endif ()
+
+    ExternalProject_Add(
+            yaml-cpp
+            PREFIX yaml-cpp
+
+            GIT_REPOSITORY https://github.com/jbeder/yaml-cpp
+            GIT_TAG yaml-cpp-0.6.3
+
+            BUILD_ALWAYS ${DO_BUILD_ALWAYS}
+            INSTALL_DIR ${YAML_INSTALL_DIR}
+            CMAKE_ARGS
+            -DYAML_BUILD_SHARED_LIBS=ON
+            -DCMAKE_INSTALL_PREFIX=${YAML_INSTALL_DIR}
+            -DYAML_CPP_BUILD_TESTS=OFF
+            -DYAML_CPP_BUILD_TOOLS=OFF
+            -DYAML_CPP_BUILD_CONTRIB=OFF
+            -DYAML_CPP_BUILD_TESTS=OFF
+
+            DEPENDS
+            BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --parallel 6)
 endif ()
 
 if (BUILD_EIGEN)
@@ -111,3 +141,4 @@ if (BUILD_VTK)
 
             BUILD_COMMAND ${CMAKE_COMMAND} --build <BINARY_DIR> --config ${CMAKE_BUILD_TYPE} --target install --parallel 6)
 endif ()
+

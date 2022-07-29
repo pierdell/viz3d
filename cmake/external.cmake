@@ -28,6 +28,13 @@ if (NOT colormap_POPULATED)
     include_directories(${colormap_SOURCE_DIR}/include)
 endif ()
 
+# --
+if (NOT yaml-cpp_DIR)
+    set(yaml-cpp_DIR ${INSTALL_ROOT}/yaml-cpp/lib/cmake/yaml-cpp)
+endif()
+find_package(yaml-cpp REQUIRED)
+message(INFO "${LOG_PREFIX}Successfully found yaml-cpp")
+
 # -- GLAD
 if (NOT GLAD_DIR)
     set(GLAD_DIR ${INSTALL_ROOT}/glad/lib/cmake/glad)
